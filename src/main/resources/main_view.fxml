@@ -1,0 +1,5 @@
+<?import javafx.scene.layout.BorderPane?>
+<BorderPane fx:controller="org.hsd.cryptoeditor.controller.MainController"
+            xmlns:fx="http://javafx.com/fxml" fx:id="borderPaneLayout">
+
+</BorderPane>
