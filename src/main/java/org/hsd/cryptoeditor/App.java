@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.hsd.cryptoeditor.service.DialogService;
 
 public class App extends Application{
 
@@ -19,5 +20,7 @@ public class App extends Application{
         primaryStage.setTitle("Crypto Editor");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        DialogService.getInstance().setWindow(primaryStage);
     }
 }
