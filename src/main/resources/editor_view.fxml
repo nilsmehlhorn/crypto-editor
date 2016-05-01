@@ -1,0 +1,5 @@
+<?import javafx.scene.control.TextArea?>
+<TextArea fx:controller="org.hsd.cryptoeditor.controller.EditorController"
+          xmlns:fx="http://javafx.com/fxml" fx:id="editorField" prefHeight="-Infinity">
+
+</TextArea>
