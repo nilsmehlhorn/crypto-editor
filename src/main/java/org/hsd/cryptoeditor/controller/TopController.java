@@ -3,15 +3,18 @@ package org.hsd.cryptoeditor.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
+import org.hsd.cryptoeditor.model.Document;
 import org.hsd.cryptoeditor.service.DialogService;
-import org.hsd.cryptoeditor.service.TextService;
+import org.hsd.cryptoeditor.service.DocumentService;
+
+import java.io.File;
 
 public class TopController {
-    TextService textService;
+    DocumentService documentService;
 
     @FXML
     public void initialize() {
-        textService = TextService.getInstance();
+        documentService = DocumentService.getInstance();
     }
 
     public void fileNew(ActionEvent actionEvent) {
@@ -19,11 +22,15 @@ public class TopController {
     }
 
     public void save(ActionEvent actionEvent) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save");
+        Document doc = DocumentService.getInstance().currentDocumentProperty().get();
+        if(doc.getFile() == null) {
+            DocumentService.getInstance().saveCurrent(DialogService.getInstance().showSaveDialog("Save"));
+        } else {
+            DocumentService.getInstance().saveCurrent(doc.getFile());
+        }
     }
 
     public void open(ActionEvent event) {
-        TextService.getInstance().load(DialogService.getInstance().showOpenDialog("Open"));
+        DocumentService.getInstance().load(DialogService.getInstance().showOpenDialog("Open"));
     }
 }

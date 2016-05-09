@@ -8,7 +8,6 @@ import javafx.concurrent.Task;
 import java.io.*;
 
 public class SaveService extends Service {
-
     private StringProperty url = new SimpleStringProperty();
     private InputStream contentInput;
 

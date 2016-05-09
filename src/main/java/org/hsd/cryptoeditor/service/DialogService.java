@@ -1,5 +1,6 @@
 package org.hsd.cryptoeditor.service;
 
+import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 
@@ -20,6 +21,21 @@ public class DialogService {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(title);
         return fileChooser.showOpenDialog(window);
+    }
+
+    public File showSaveDialog(String title) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(title);
+        return fileChooser.showSaveDialog(window);
+    }
+
+    public void showErrorDialog(String header, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+
+        alert.showAndWait();
     }
 
     /////

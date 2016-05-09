@@ -8,7 +8,7 @@ import java.io.File;
 /**
  * Created by nils on 5/1/16.
  */
-public class TextEntity {
+public class Document {
 
     private File file;
 
