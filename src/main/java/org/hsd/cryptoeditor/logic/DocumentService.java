@@ -1,15 +1,14 @@
-package org.hsd.cryptoeditor.service;
+package org.hsd.cryptoeditor.logic;
 
 import javafx.beans.property.*;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import org.apache.commons.io.IOUtils;
 import org.hsd.cryptoeditor.concurrency.LoadService;
 import org.hsd.cryptoeditor.concurrency.SaveService;
-import org.hsd.cryptoeditor.encryption.AESCryptographer;
-import org.hsd.cryptoeditor.encryption.Cryptographer;
-import org.hsd.cryptoeditor.encryption.DESCryptographer;
-import org.hsd.cryptoeditor.encryption.exception.CryptographerException;
+import org.hsd.cryptoeditor.crypto.CryptoService;
+import org.hsd.cryptoeditor.crypto.encryption.NoEncryption;
+import org.hsd.cryptoeditor.crypto.grapher.BCCryptographer;
+import org.hsd.cryptoeditor.dialog.DialogService;
+import org.hsd.cryptoeditor.crypto.grapher.Cryptographer;
 import org.hsd.cryptoeditor.model.Document;
 
 import javax.crypto.CipherInputStream;
@@ -25,27 +24,17 @@ public class DocumentService {
 
     private ObjectProperty<Document> current = new SimpleObjectProperty<Document>();
 
-    private SecretKey key;
-
     public void load(File file) {
         final Document document = new Document();
         document.setFile(file);
         final LoadService loadService = new LoadService();
         loadService.setUrl(file.getPath());
         loadService.setOnSucceeded(event -> {
-            InputStream contentIn = new ByteArrayInputStream(loadService.getValue());
-            try {
-                CipherInputStream decryptor = new AESCryptographer().getDecryptor(contentIn, key);
-                document.setText(new String(IOUtils.toByteArray(decryptor)));
-                current.set(document);
-            } catch (CryptographerException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            current.set(loadService.getValue());
         });
         loadService.setOnFailed(f -> {
             DialogService.getInstance().showErrorDialog("Could not load file", "An error occured while loading the file");
+            loadService.getException().printStackTrace();
         });
         loadService.start();
     }
@@ -57,17 +46,11 @@ public class DocumentService {
     public void save(Document document, File file) {
         SaveService saveService = new SaveService();
         saveService.setUrl(file.getPath());
-        try {
-            InputStream in = new ByteArrayInputStream(document.getText().getBytes("UTF-8"));
-            Cryptographer c = new AESCryptographer();
-            CipherInputStream cIn = c.getEncryptor(in, key);
-            saveService.setContentInput(cIn);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (CryptographerException e) {
-            e.printStackTrace();
-        }
+        saveService.setDocument(current.get());
         saveService.setOnSucceeded(event -> document.setFile(file));
+        saveService.setOnFailed(event -> {
+            saveService.getException().printStackTrace();
+        });
         saveService.start();
     }
 
@@ -84,11 +67,6 @@ public class DocumentService {
             throw new IllegalStateException("Already instantiated");
         } else {
             current.set(new Document());
-            try {
-                key = KeyGenerator.getInstance("AES").generateKey();
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
         }
     }
 

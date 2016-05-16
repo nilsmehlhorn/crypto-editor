@@ -1,10 +1,14 @@
-package org.hsd.cryptoeditor.service;
+package org.hsd.cryptoeditor.dialog;
 
-import javafx.scene.control.Alert;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
+import org.hsd.cryptoeditor.crypto.encryption.Encryption;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Created by nils on 5/1/16.
@@ -36,6 +40,25 @@ public class DialogService {
         alert.setContentText(content);
 
         alert.showAndWait();
+    }
+
+    public Optional<Encryption> showEncryptionDialog(Encryption currentEncryption) {
+        Dialog<Encryption> encryptionDialog = new Dialog<>();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dialog/encryption_dialog_view.fxml"));
+            encryptionDialog.getDialogPane().setContent(loader.load());
+            encryptionDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+            EncryptionDialogController controller = loader.getController();
+            controller.setEncryption(currentEncryption);
+            encryptionDialog.setResultConverter(buttonType -> {
+                ButtonBar.ButtonData data = buttonType == null ? null : buttonType.getButtonData();
+                return data == ButtonBar.ButtonData.OK_DONE ? controller.getEncryption() : null;
+            });
+            return encryptionDialog.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /////

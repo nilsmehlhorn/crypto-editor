@@ -9,7 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.hsd.cryptoeditor.service.DialogService;
+import org.hsd.cryptoeditor.dialog.DialogService;
 
 import java.security.Security;
 

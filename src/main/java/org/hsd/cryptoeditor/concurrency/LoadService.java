@@ -1,16 +1,22 @@
 package org.hsd.cryptoeditor.concurrency;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import sun.misc.IOUtils;
-import sun.nio.ch.IOUtil;
+import org.apache.commons.io.IOUtils;
+import org.hsd.cryptoeditor.crypto.CryptoService;
+import org.hsd.cryptoeditor.crypto.encryption.Encryption;
+import org.hsd.cryptoeditor.crypto.grapher.Cryptographer;
+import org.hsd.cryptoeditor.model.Document;
+import org.hsd.cryptoeditor.model.PersistenceDTO;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
 
-public class LoadService extends Service<byte[]> {
+public class LoadService extends Service<Document> {
 
     private StringProperty url = new SimpleStringProperty();
 
@@ -18,36 +24,23 @@ public class LoadService extends Service<byte[]> {
         url.set(value);
     }
 
-    public final String getUrl() {
-        return url.get();
-    }
+    protected Task<Document> createTask() {
+        return new Task<Document>() {
 
-    protected Task<byte[]> createTask() {
-        return new Task<byte[]>() {
-
-            protected byte[] call() throws Exception {
+            protected Document call() throws Exception {
                 File file = new File(url.get());
-                InputStream is = new FileInputStream(url.get());
-                long length = file.length();
-                if (length > Integer.MAX_VALUE) {
-                    throw new IllegalArgumentException("File too large");
-                }
-
-                byte[] bytes = new byte[(int) length];
-
-                int offset = 0;
-                int numRead = 0;
-                while (offset < bytes.length &&
-                        (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
-                    offset += numRead;
-                }
-
-                if(offset < bytes.length) {
-                    throw new IOException("Could not completeley read file " + file.getName());
-                }
-
-                is.close();
-                return bytes;
+                ObjectMapper objectMapper = new ObjectMapper();
+                PersistenceDTO dto = objectMapper.readValue(file, PersistenceDTO.class);
+                Document document = new Document();
+                Encryption encryption = CryptoService.getInstance().getEncryption(dto.getEncryptionType());
+                encryption.setMode(dto.getEncryptionMode());
+                encryption.setPadding(dto.getEncryptionPadding());
+                document.setEncryption(encryption);
+                document.setFile(file);
+                Cryptographer cryptographer = CryptoService.getInstance().getCryptographer(document.getEncryption());
+                InputStream cryptoIn = cryptographer.getDecryptor(new ByteArrayInputStream(dto.getContent()));
+                document.setText(new String(IOUtils.toByteArray(cryptoIn)));
+                return document;
             }
         };
     }

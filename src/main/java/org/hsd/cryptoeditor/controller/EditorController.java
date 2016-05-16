@@ -1,12 +1,10 @@
 package org.hsd.cryptoeditor.controller;
 
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import org.hsd.cryptoeditor.model.Document;
-import org.hsd.cryptoeditor.service.DocumentService;
+import org.hsd.cryptoeditor.logic.DocumentService;
 
 /**
  * Created by nils on 5/1/16.
