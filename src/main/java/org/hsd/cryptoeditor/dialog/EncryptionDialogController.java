@@ -51,12 +51,14 @@ public class EncryptionDialogController {
             settingsView.add(new Label("Block Cipher Mode"), 0, 0);
             ObservableList<EncryptionMode> modes = FXCollections.observableArrayList(EncryptionMode.values());
             ComboBox<EncryptionMode> modeBox = new ComboBox<>(modes);
+            modeBox.setValue(encryption.getMode());
             modeBox.setOnAction(event -> encryption.setMode(modeBox.getValue()));
             settingsView.add(modeBox, 1, 0);
 
             settingsView.add(new Label("Padding Method"), 0, 1);
             ObservableList<EncryptionPadding> paddings = FXCollections.observableArrayList(EncryptionPadding.values());
             ComboBox<EncryptionPadding> padBox = new ComboBox<>(paddings);
+            padBox.setValue(encryption.getPadding());
             padBox.setOnAction(event -> encryption.setPadding(padBox.getValue()));
             settingsView.add(padBox, 1, 1);
             n = settingsView;
