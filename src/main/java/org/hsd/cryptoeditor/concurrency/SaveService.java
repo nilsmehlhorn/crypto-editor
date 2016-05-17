@@ -17,7 +17,6 @@ import java.io.*;
 public class SaveService extends Service<Void> {
     private StringProperty url = new SimpleStringProperty();
     private Document document;
-    private Cryptographer cryptographer;
 
     public final void setUrl(String value) {
         url.set(value);
@@ -25,7 +24,6 @@ public class SaveService extends Service<Void> {
 
     public void setDocument(Document document) {
         this.document = document;
-        this.cryptographer = CryptoService.getInstance().getCryptographer(document.getEncryption());
     }
 
     protected Task<Void> createTask() {
@@ -37,7 +35,8 @@ public class SaveService extends Service<Void> {
                 dto.setEncryptionMode(document.getEncryption().getMode());
                 dto.setEncryptionPadding(document.getEncryption().getPadding());
                 InputStream in = new ByteArrayInputStream(document.getText().getBytes("UTF-8"));
-                if(document.getEncryption().getType() != EncryptionType.NONE) {
+                if (document.getEncryption().getType() != EncryptionType.NONE) {
+                    Cryptographer cryptographer = CryptoService.getInstance().getCryptographer(document.getEncryption());
                     InputStream cryptoIn = cryptographer.getEncryptor(in);
                     dto.setContent(IOUtils.toByteArray(cryptoIn));
                 } else {
