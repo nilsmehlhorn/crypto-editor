@@ -8,6 +8,7 @@
             <MenuItem text="New" onAction="#fileNew"></MenuItem>
             <MenuItem text="Open" onAction="#open"></MenuItem>
             <MenuItem text="Save" accelerator="Ctrl+S" onAction="#save"></MenuItem>
+            <MenuItem text="Save as" accelerator="Ctrl+Shift+S" onAction="#saveAs" fx:id="saveAsItem"></MenuItem>
             <MenuItem text="Encryption..." onAction="#encryption"></MenuItem>
         </items>
     </Menu>

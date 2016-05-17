@@ -2,6 +2,7 @@ package org.hsd.cryptoeditor.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.MenuItem;
 import org.hsd.cryptoeditor.crypto.encryption.Encryption;
 import org.hsd.cryptoeditor.model.Document;
 import org.hsd.cryptoeditor.dialog.DialogService;
@@ -11,7 +12,8 @@ import org.hsd.cryptoeditor.logic.DocumentService;
 import java.util.Optional;
 
 public class TopController {
-    DocumentService documentService;
+
+    private DocumentService documentService;
 
     @FXML
     public void initialize() {
@@ -23,16 +25,20 @@ public class TopController {
     }
 
     public void save(ActionEvent actionEvent) {
-        Document doc = DocumentService.getInstance().currentDocumentProperty().get();
+        Document doc = documentService.currentDocumentProperty().get();
         if (doc.getFile() == null) {
-            DocumentService.getInstance().saveCurrent(DialogService.getInstance().showSaveDialog("Save"));
+            documentService.saveCurrent(DialogService.getInstance().showSaveDialog("Save"));
         } else {
-            DocumentService.getInstance().saveCurrent(doc.getFile());
+            documentService.saveCurrent(doc.getFile());
         }
     }
 
+    public void saveAs(ActionEvent actionEvent) {
+        documentService.saveCurrent(DialogService.getInstance().showSaveDialog("Save as"));
+    }
+
     public void open(ActionEvent event) {
-        DocumentService.getInstance().load(DialogService.getInstance().showOpenDialog("Open"));
+        documentService.load(DialogService.getInstance().showOpenDialog("Open"));
     }
 
     public void encryption(ActionEvent event) {
