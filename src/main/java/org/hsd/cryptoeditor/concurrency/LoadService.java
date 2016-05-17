@@ -8,6 +8,7 @@ import javafx.concurrent.Task;
 import org.apache.commons.io.IOUtils;
 import org.hsd.cryptoeditor.crypto.CryptoService;
 import org.hsd.cryptoeditor.crypto.encryption.Encryption;
+import org.hsd.cryptoeditor.crypto.encryption.EncryptionType;
 import org.hsd.cryptoeditor.crypto.grapher.Cryptographer;
 import org.hsd.cryptoeditor.model.Document;
 import org.hsd.cryptoeditor.model.PersistenceDTO;
@@ -37,9 +38,13 @@ public class LoadService extends Service<Document> {
                 encryption.setPadding(dto.getEncryptionPadding());
                 document.setEncryption(encryption);
                 document.setFile(file);
-                Cryptographer cryptographer = CryptoService.getInstance().getCryptographer(document.getEncryption());
-                InputStream cryptoIn = cryptographer.getDecryptor(new ByteArrayInputStream(dto.getContent()));
-                document.setText(new String(IOUtils.toByteArray(cryptoIn)));
+                byte[] bytes = dto.getContent();
+                if(encryption.getType() != EncryptionType.NONE) {
+                    Cryptographer cryptographer = CryptoService.getInstance().getCryptographer(document.getEncryption());
+                    InputStream cryptoIn = cryptographer.getDecryptor(new ByteArrayInputStream(dto.getContent()));
+                    bytes = IOUtils.toByteArray(cryptoIn);
+                }
+                document.setText(new String(bytes));
                 return document;
             }
         };
