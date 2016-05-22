@@ -1,6 +1,7 @@
 package org.hsd.cryptoeditor.model;
 
-import org.hsd.cryptoeditor.crypto.encryption.Encryption;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hsd.cryptoeditor.crypto.encryption.EncryptionMode;
 import org.hsd.cryptoeditor.crypto.encryption.EncryptionPadding;
 import org.hsd.cryptoeditor.crypto.encryption.EncryptionType;
@@ -16,7 +17,18 @@ public class PersistenceDTO {
 
     private EncryptionMode encryptionMode;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private byte[] initializationVector;
+
     private byte[] content;
+
+    public byte[] getInitializationVector() {
+        return initializationVector;
+    }
+
+    public void setInitializationVector(byte[] initializationVector) {
+        this.initializationVector = initializationVector;
+    }
 
     public byte[] getContent() {
         return content;

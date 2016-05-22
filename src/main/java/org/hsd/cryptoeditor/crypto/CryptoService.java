@@ -1,9 +1,6 @@
 package org.hsd.cryptoeditor.crypto;
 
-import org.hsd.cryptoeditor.crypto.encryption.AESEncryption;
-import org.hsd.cryptoeditor.crypto.encryption.Encryption;
-import org.hsd.cryptoeditor.crypto.encryption.EncryptionType;
-import org.hsd.cryptoeditor.crypto.encryption.NoEncryption;
+import org.hsd.cryptoeditor.crypto.encryption.*;
 import org.hsd.cryptoeditor.crypto.grapher.BCCryptographer;
 import org.hsd.cryptoeditor.crypto.grapher.Cryptographer;
 
@@ -21,6 +18,9 @@ public class CryptoService {
         switch (type) {
             case NONE:
                 encryption = new NoEncryption();
+                break;
+            case DES:
+                encryption = new DESEncryption();
                 break;
             case AES:
                 encryption = new AESEncryption();

@@ -1,19 +1,13 @@
 package org.hsd.cryptoeditor.crypto.grapher;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.hsd.cryptoeditor.crypto.encryption.Encryption;
-import org.hsd.cryptoeditor.crypto.encryption.EncryptionMode;
-import org.hsd.cryptoeditor.crypto.encryption.EncryptionPadding;
-import org.hsd.cryptoeditor.crypto.encryption.EncryptionType;
 import org.hsd.cryptoeditor.crypto.exception.CryptographerException;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import java.io.InputStream;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by nils on 5/16/16.
@@ -44,9 +38,17 @@ public class BCCryptographer implements Cryptographer {
         if (encryption == null) {
             throw new IllegalStateException("BCCryptographer needs to be initialized with a valid encryption");
         }
-        Cipher c = null;
-        c = Cipher.getInstance(String.format("%s/%s/%s", encryption.getType(), encryption.getMode(), encryption.getPadding()), "BC");
-        c.init(cipherMode, key);
+        Cipher c = Cipher.getInstance(String.format("%s/%s/%s", encryption.getType(), encryption.getMode(), encryption.getPadding()), "BC");
+        if(encryption.getMode().isVectorMode()) {
+            if(encryption.getInitializationVector() != null) {
+                c.init(cipherMode, key, new IvParameterSpec(encryption.getInitializationVector()));
+            } else {
+                c.init(cipherMode, key);
+                encryption.setInitializationVector(c.getIV());
+            }
+        } else {
+            c.init(cipherMode, key);
+        }
         return c;
     }
 

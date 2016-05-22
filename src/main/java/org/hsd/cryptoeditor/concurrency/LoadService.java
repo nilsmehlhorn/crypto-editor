@@ -36,6 +36,9 @@ public class LoadService extends Service<Document> {
                 Encryption encryption = CryptoService.getInstance().getEncryption(dto.getEncryptionType());
                 encryption.setMode(dto.getEncryptionMode());
                 encryption.setPadding(dto.getEncryptionPadding());
+                if(encryption.getMode().isVectorMode()) {
+                    encryption.setInitializationVector(dto.getInitializationVector());
+                }
                 document.setEncryption(encryption);
                 document.setFile(file);
                 byte[] bytes = dto.getContent();

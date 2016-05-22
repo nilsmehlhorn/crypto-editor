@@ -5,7 +5,7 @@ package org.hsd.cryptoeditor.crypto.encryption;
  */
 public class NoEncryption extends Encryption {
     public NoEncryption() {
-        super(EncryptionType.NONE);
+        super(EncryptionType.NONE, EncryptionPadding.values());
     }
 
 }

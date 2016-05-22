@@ -42,6 +42,9 @@ public class SaveService extends Service<Void> {
                 } else {
                     dto.setContent(IOUtils.toByteArray(in));
                 }
+                if(document.getEncryption().getMode().isVectorMode()) {
+                    dto.setInitializationVector(document.getEncryption().getInitializationVector());
+                }
                 ObjectMapper mapper = new ObjectMapper();
                 InputStream contentInput = new ByteArrayInputStream(mapper.writeValueAsBytes(dto));
 

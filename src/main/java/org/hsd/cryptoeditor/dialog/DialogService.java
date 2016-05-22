@@ -46,6 +46,7 @@ public class DialogService {
         Dialog<Encryption> encryptionDialog = new Dialog<>();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/dialog/encryption_dialog_view.fxml"));
+            encryptionDialog.setTitle("Encryption");
             encryptionDialog.getDialogPane().setContent(loader.load());
             encryptionDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
             EncryptionDialogController controller = loader.getController();

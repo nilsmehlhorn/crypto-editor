@@ -3,6 +3,7 @@ package org.hsd.cryptoeditor.dialog;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -11,7 +12,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import org.hsd.cryptoeditor.crypto.CryptoService;
-import org.hsd.cryptoeditor.crypto.encryption.*;
+import org.hsd.cryptoeditor.crypto.encryption.Encryption;
+import org.hsd.cryptoeditor.crypto.encryption.EncryptionMode;
+import org.hsd.cryptoeditor.crypto.encryption.EncryptionPadding;
+import org.hsd.cryptoeditor.crypto.encryption.EncryptionType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,6 +52,8 @@ public class EncryptionDialogController {
         } else {
             Encryption encryption = mapping.get(type);
             GridPane settingsView = new GridPane();
+            settingsView.setPadding(new Insets(25, 10, 0, 10));
+            settingsView.setHgap(20);
             settingsView.add(new Label("Block Cipher Mode"), 0, 0);
             ObservableList<EncryptionMode> modes = FXCollections.observableArrayList(EncryptionMode.values());
             ComboBox<EncryptionMode> modeBox = new ComboBox<>(modes);
@@ -56,7 +62,7 @@ public class EncryptionDialogController {
             settingsView.add(modeBox, 1, 0);
 
             settingsView.add(new Label("Padding Method"), 0, 1);
-            ObservableList<EncryptionPadding> paddings = FXCollections.observableArrayList(EncryptionPadding.values());
+            ObservableList<EncryptionPadding> paddings = FXCollections.observableArrayList(encryption.getPossiblePaddings());
             ComboBox<EncryptionPadding> padBox = new ComboBox<>(paddings);
             padBox.setValue(encryption.getPadding());
             padBox.setOnAction(event -> encryption.setPadding(padBox.getValue()));
