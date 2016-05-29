@@ -23,6 +23,12 @@
         </VBox>
     </left>
     <center>
-        <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER"/>
+        <GridPane fx:id="settingsPane" hgap="20">
+            <padding><Insets top="25" right="10" bottom="0" left="10"/></padding>
+            <Label text="Block Cipher Mode" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <ComboBox fx:id="blockModeDropdown" GridPane.columnIndex="1" GridPane.rowIndex="0" promptText="Select..."/>
+            <Label text="Padding Method" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <ComboBox fx:id="paddingDropdown" GridPane.columnIndex="1" GridPane.rowIndex="1" promptText="Select..."/>
+        </GridPane>
     </center>
 </BorderPane>
