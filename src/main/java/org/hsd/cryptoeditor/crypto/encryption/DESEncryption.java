@@ -6,6 +6,7 @@ package org.hsd.cryptoeditor.crypto.encryption;
 public class DESEncryption extends Encryption {
 
     public DESEncryption() {
-        super(EncryptionType.DES, EncryptionPadding.PKCS5Padding, EncryptionPadding.PKCS7Padding);
+        super(EncryptionType.DES);
+        this.setMode(EncryptionMode.ECB);
     }
 }

@@ -1,6 +1,7 @@
 package org.hsd.cryptoeditor.crypto.encryption;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -10,41 +11,40 @@ public abstract class Encryption {
 
     private EncryptionType type;
 
-    private List<EncryptionPadding> possiblePaddings = new ArrayList<>();
-
     private EncryptionMode mode;
 
     private EncryptionPadding padding;
 
     private byte[] initializationVector;
 
-    public Encryption(EncryptionType type, EncryptionPadding... paddings) {
+    public Encryption(EncryptionType type) {
         this.type = type;
-        for (EncryptionPadding p : paddings) {
-            possiblePaddings.add(p);
-        }
-        if (!type.equals(EncryptionType.NONE)) {
-            this.mode = EncryptionMode.ECB;
-            if (possiblePaddings.isEmpty()) {
-                this.padding = EncryptionPadding.NoPadding;
-            } else {
-                this.padding = possiblePaddings.get(0);
-            }
-        }
+        this.mode = EncryptionMode.ECB;
     }
 
-    public EncryptionPadding getPadding() {
-        return padding;
+    public List<EncryptionPadding> getPossiblePaddings() {
+        List<EncryptionPadding> possiblePaddings = new ArrayList<>();
+        if (type.isStreamType()) {
+            possiblePaddings.add(EncryptionPadding.NoPadding);
+        } else {
+            possiblePaddings.addAll(Arrays.asList(type.getSupportedPaddings()));
+            possiblePaddings.retainAll(Arrays.asList(mode.getSupportedPaddings()));
+        }
+        return possiblePaddings;
     }
 
     public void setPadding(EncryptionPadding padding) {
         if (padding == null)
             return;
-        if (possiblePaddings.contains(padding)) {
+        if (getPossiblePaddings().contains(padding)) {
             this.padding = padding;
         } else {
             throw new IllegalArgumentException("Padding is not listed as possible for the encryption type");
         }
+    }
+
+    public EncryptionPadding getPadding() {
+        return padding;
     }
 
     public EncryptionMode getMode() {
@@ -57,10 +57,6 @@ public abstract class Encryption {
 
     public EncryptionType getType() {
         return type;
-    }
-
-    public List<EncryptionPadding> getPossiblePaddings() {
-        return possiblePaddings;
     }
 
     public byte[] getInitializationVector() {

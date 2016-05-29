@@ -6,7 +6,17 @@ package org.hsd.cryptoeditor.crypto.encryption;
 
 
 public enum EncryptionPadding {
-    NoPadding,
-    PKCS5Padding,
-    PKCS7Padding
+    NoPadding("NoPadding"),
+    PKCS5Padding("PKCS5Padding"),
+    PKCS7Padding("PKCS7Padding");
+
+    private final String name;
+
+    EncryptionPadding(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

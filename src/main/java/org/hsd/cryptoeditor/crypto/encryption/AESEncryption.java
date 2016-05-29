@@ -7,6 +7,7 @@ package org.hsd.cryptoeditor.crypto.encryption;
 public class AESEncryption extends Encryption {
 
     public AESEncryption() {
-        super(EncryptionType.AES, EncryptionPadding.PKCS7Padding);
+        super(EncryptionType.AES);
+        this.setMode(EncryptionMode.ECB);
     }
 }
