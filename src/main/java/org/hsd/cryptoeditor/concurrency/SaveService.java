@@ -12,7 +12,11 @@ import org.hsd.cryptoeditor.crypto.grapher.Cryptographer;
 import org.hsd.cryptoeditor.model.Document;
 import org.hsd.cryptoeditor.model.PersistenceDTO;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public class SaveService extends Service<Void> {
     private StringProperty url = new SimpleStringProperty();
@@ -47,15 +51,7 @@ public class SaveService extends Service<Void> {
                 }
                 ObjectMapper mapper = new ObjectMapper();
                 InputStream contentInput = new ByteArrayInputStream(mapper.writeValueAsBytes(dto));
-
-                FileOutputStream output = new FileOutputStream(url.get());
-                byte[] buf = new byte[1024];
-                int i;
-                while ((i = contentInput.read(buf)) > 0) {
-                    output.write(buf, 0, i);
-                }
-                contentInput.close();
-                output.close();
+                Files.copy(contentInput, Paths.get(url.get()), StandardCopyOption.REPLACE_EXISTING);
                 return null;
             }
         };
