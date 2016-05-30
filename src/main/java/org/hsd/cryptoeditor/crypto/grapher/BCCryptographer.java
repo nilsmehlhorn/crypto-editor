@@ -38,7 +38,15 @@ public class BCCryptographer implements Cryptographer {
         if (encryption == null) {
             throw new IllegalStateException("BCCryptographer needs to be initialized with a valid encryption");
         }
-        Cipher c = Cipher.getInstance(String.format("%s/%s/%s", encryption.getType(), encryption.getMode(), encryption.getPadding()), "BC");
+        String instanceCall = encryption.getType().getName();
+        if(!encryption.getType().isStreamType()) {
+            instanceCall += "/" + encryption.getMode().getName();
+            if(!encryption.getMode().isStreamMode()) {
+                instanceCall += "/" + encryption.getPadding();
+            }
+        }
+        Cipher c = Cipher.getInstance(instanceCall, "BC");
+
         if(encryption.getMode().isVectorMode()) {
             if(encryption.getInitializationVector() != null) {
                 c.init(cipherMode, key, new IvParameterSpec(encryption.getInitializationVector()));
