@@ -25,6 +25,9 @@ public class CryptoService {
             case AES:
                 encryption = new AESEncryption();
                 break;
+            case ARC4:
+                encryption = new ARC4Encryption();
+                break;
         }
         return encryption;
     }
