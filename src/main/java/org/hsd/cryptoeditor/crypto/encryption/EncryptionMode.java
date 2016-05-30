@@ -10,7 +10,8 @@ public enum EncryptionMode {
     CBC("CBC", true, false, EncryptionPadding.values()),
     CTR("CTR", true, true, EncryptionPadding.NoPadding),
     OFB("OFB", true, true, EncryptionPadding.NoPadding),
-    CFB("CFB", true, true, EncryptionPadding.NoPadding);
+    CFB("CFB", true, true, EncryptionPadding.NoPadding),
+    GCM("GCM", true, true, EncryptionPadding.NoPadding);
 
     private final String name;
     private final boolean isVectorMode;
