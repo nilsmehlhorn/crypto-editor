@@ -8,7 +8,7 @@ import org.bouncycastle.crypto.paddings.PKCS7Padding;
 
 public enum EncryptionType {
     NONE("NONE", false, null, null),
-    AES("AES", false, EncryptionMode.values(), new EncryptionPadding[]{EncryptionPadding.PKCS7Padding}),
+    AES("AES", false, EncryptionMode.values(), new EncryptionPadding[]{EncryptionPadding.PKCS7Padding, EncryptionPadding.NoPadding}),
     DES("DES", false, EncryptionMode.values(), new EncryptionPadding[]{EncryptionPadding.PKCS5Padding, EncryptionPadding.PKCS7Padding}),
     ARC4("ARC4", true, null, null);
 

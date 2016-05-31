@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by nils on 5/11/16.
  */
-public abstract class Encryption {
+public class Encryption {
 
     private EncryptionType type;
 

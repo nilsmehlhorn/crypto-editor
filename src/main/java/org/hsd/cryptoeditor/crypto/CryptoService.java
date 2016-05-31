@@ -1,6 +1,8 @@
 package org.hsd.cryptoeditor.crypto;
 
-import org.hsd.cryptoeditor.crypto.encryption.*;
+import org.hsd.cryptoeditor.crypto.encryption.Encryption;
+import org.hsd.cryptoeditor.crypto.encryption.EncryptionMode;
+import org.hsd.cryptoeditor.crypto.encryption.EncryptionType;
 import org.hsd.cryptoeditor.crypto.grapher.BCCryptographer;
 import org.hsd.cryptoeditor.crypto.grapher.Cryptographer;
 
@@ -17,18 +19,19 @@ public class CryptoService {
         Encryption encryption = null;
         switch (type) {
             case NONE:
-                encryption = new NoEncryption();
+                encryption = new Encryption(EncryptionType.NONE);
                 break;
             case DES:
-                encryption = new DESEncryption();
+                encryption = new Encryption(EncryptionType.DES);
                 break;
             case AES:
-                encryption = new AESEncryption();
+                encryption = new Encryption(EncryptionType.AES);
                 break;
             case ARC4:
-                encryption = new ARC4Encryption();
+                encryption = new Encryption(EncryptionType.ARC4);
                 break;
         }
+        encryption.setMode(EncryptionMode.ECB);
         return encryption;
     }
 

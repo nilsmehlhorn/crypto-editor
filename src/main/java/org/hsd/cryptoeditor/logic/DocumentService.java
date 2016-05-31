@@ -1,21 +1,12 @@
 package org.hsd.cryptoeditor.logic;
 
 import javafx.beans.property.*;
-import org.apache.commons.io.IOUtils;
 import org.hsd.cryptoeditor.concurrency.LoadService;
 import org.hsd.cryptoeditor.concurrency.SaveService;
-import org.hsd.cryptoeditor.crypto.CryptoService;
-import org.hsd.cryptoeditor.crypto.encryption.NoEncryption;
-import org.hsd.cryptoeditor.crypto.grapher.BCCryptographer;
 import org.hsd.cryptoeditor.dialog.DialogService;
-import org.hsd.cryptoeditor.crypto.grapher.Cryptographer;
 import org.hsd.cryptoeditor.model.Document;
 
-import javax.crypto.CipherInputStream;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import java.io.*;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by nils on 5/1/16.

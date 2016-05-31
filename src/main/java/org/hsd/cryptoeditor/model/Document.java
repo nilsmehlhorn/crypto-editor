@@ -3,7 +3,7 @@ package org.hsd.cryptoeditor.model;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.hsd.cryptoeditor.crypto.encryption.Encryption;
-import org.hsd.cryptoeditor.crypto.encryption.NoEncryption;
+import org.hsd.cryptoeditor.crypto.encryption.EncryptionType;
 
 import java.io.File;
 import java.io.Serializable;
@@ -20,7 +20,7 @@ public class Document implements Serializable {
     private StringProperty content = new SimpleStringProperty();
 
     public Document() {
-        encryption = new NoEncryption();
+        encryption = new Encryption(EncryptionType.NONE);
     }
 
     public String getText() {
