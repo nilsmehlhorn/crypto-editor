@@ -6,11 +6,13 @@
 
     <properties>
         <jackson.version>2.7.0</jackson.version>
+        <site.path>snapshot</site.path>
     </properties>
 
     <groupId>org.hsd</groupId>
     <artifactId>crypto-editor</artifactId>
     <version>1.0</version>
+    <url>https://github.com/nilomatix/crypto-editor</url>
 
     <build>
         <plugins>
@@ -39,11 +41,30 @@
                     <alphabeticalIndex>true</alphabeticalIndex>
                     <generateHtml>true</generateHtml>
                     <input>${basedir}/src/main/java</input>
-                    <outputDirectory>${basedir}/doc</outputDirectory>
+                    <outputDirectory>${basedir}/target/doc</outputDirectory>
                     <filePatterns>*.java</filePatterns>
                     <recursive>true</recursive>
                 </configuration>
             </plugin>
+            <!-- TODO: configure build profiles
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>0.12</version>
+                <configuration>
+                    <repositoryName>crypto-editor</repositoryName>
+                    <repositoryOwner>nilomatix</repositoryOwner>
+
+
+                    <server>github</server>
+                    <outputDirectory>${basedir}/target/doc/doxygen</outputDirectory>
+
+                    <message>Building documentation site for crypto-editor</message>
+                    <path>${site.path}</path>
+                    <merge>true</merge>
+                </configuration>
+            </plugin>
+            -->
         </plugins>
     </build>
 
