@@ -7,14 +7,22 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jackson.version>2.7.0</jackson.version>
-        <java.version>1.8</java.version>
-        <mainclass>org.hsd.cryptoeditor.App</mainclass>
+        <app.java.version>1.8</app.java.version>
+        <app.mainclass>org.hsd.cryptoeditor.App</app.mainclass>
     </properties>
 
     <groupId>org.hsd</groupId>
     <artifactId>crypto-editor</artifactId>
     <version>0.1</version>
     <url>https://github.com/nilomatix/crypto-editor</url>
+
+
+    <scm>
+        <url>https://github.com/nilomatix/crypto-editor</url>
+        <connection>scm:git:git://github.com//nilomatix/crypto-editor.git</connection>
+        <developerConnection>scm:git:git@github.com:nilomatix/crypto-editor.git</developerConnection>
+    </scm>
+
 
     <profiles>
         <profile>
@@ -25,156 +33,90 @@
             <properties>
                 <site.path>doc/snapshot</site.path>
             </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <version>3.5.1</version>
-                        <configuration>
-                            <source>${java.version}</source>
-                            <target>${java.version}</target>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>com.zenjava</groupId>
-                        <artifactId>javafx-maven-plugin</artifactId>
-                        <version>8.5.0</version>
-                        <configuration>
-                            <mainClass>${mainclass}</mainClass>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>com.soebes.maven.plugins</groupId>
-                        <artifactId>doxygen-maven-plugin</artifactId>
-                        <version>1.1.0</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>report</goal>
-                                </goals>
-                                <phase>site</phase>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <alphabeticalIndex>true</alphabeticalIndex>
-                            <generateHtml>true</generateHtml>
-                            <input>${basedir}/src/main/java</input>
-                            <outputDirectory>${basedir}/target/doc</outputDirectory>
-                            <filePatterns>*.java</filePatterns>
-                            <recursive>true</recursive>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>com.github.github</groupId>
-                        <artifactId>site-maven-plugin</artifactId>
-                        <version>0.12</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>site</goal>
-                                </goals>
-                                <phase>site</phase>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <repositoryName>crypto-editor</repositoryName>
-                            <repositoryOwner>nilomatix</repositoryOwner>
-
-                            <server>github</server>
-                            <outputDirectory>${basedir}/target/doc/doxygen</outputDirectory>
-
-                            <message>Building documentation site for crypto-editor</message>
-                            <path>${site.path}</path>
-                            <merge>true</merge>
-
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-site-plugin</artifactId>
-                        <version>3.5.1</version>
-                        <configuration>
-                            <skip>true</skip>
-                            <skipDeploy>true</skipDeploy>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
         <profile>
             <id>release</id>
             <properties>
                 <site.path>doc/release/${project.version}</site.path>
             </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <version>3.5.1</version>
-                        <configuration>
-                            <source>${java.version}</source>
-                            <target>${java.version}</target>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>com.zenjava</groupId>
-                        <artifactId>javafx-maven-plugin</artifactId>
-                        <version>8.5.0</version>
-                        <configuration>
-                            <mainClass>${mainclass}</mainClass>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>com.soebes.maven.plugins</groupId>
-                        <artifactId>doxygen-maven-plugin</artifactId>
-                        <version>1.1.0</version>
-                        <configuration>
-                            <alphabeticalIndex>true</alphabeticalIndex>
-                            <generateHtml>true</generateHtml>
-                            <input>${basedir}/src/main/java</input>
-                            <outputDirectory>${basedir}/target/doc</outputDirectory>
-                            <filePatterns>*.java</filePatterns>
-                            <recursive>true</recursive>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>com.github.github</groupId>
-                        <artifactId>site-maven-plugin</artifactId>
-                        <version>0.12</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>site</goal>
-                                </goals>
-                                <phase>site-deploy</phase>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <repositoryName>crypto-editor</repositoryName>
-                            <repositoryOwner>nilomatix</repositoryOwner>
-
-                            <server>github</server>
-                            <outputDirectory>${basedir}/target/doc/doxygen</outputDirectory>
-
-                            <message>Building documentation site for crypto-editor</message>
-                            <path>${site.path}</path>
-                            <merge>true</merge>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-site-plugin</artifactId>
-                        <version>3.5.1</version>
-                        <configuration>
-                            <skipDeploy>true</skipDeploy>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
     </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>${app.java.version}</source>
+                    <target>${app.java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.zenjava</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>8.5.0</version>
+                <configuration>
+                    <mainClass>${app.mainclass}</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.soebes.maven.plugins</groupId>
+                <artifactId>doxygen-maven-plugin</artifactId>
+                <version>1.1.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <phase>site</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <alphabeticalIndex>true</alphabeticalIndex>
+                    <generateHtml>true</generateHtml>
+                    <input>${basedir}/src/main/java</input>
+                    <outputDirectory>${basedir}/target/doc</outputDirectory>
+                    <filePatterns>*.java</filePatterns>
+                    <recursive>true</recursive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>0.12</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <phase>site</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <repositoryName>crypto-editor</repositoryName>
+                    <repositoryOwner>nilomatix</repositoryOwner>
+
+                    <server>github</server>
+                    <outputDirectory>${basedir}/target/doc/doxygen</outputDirectory>
+
+                    <message>Building documentation site for crypto-editor</message>
+                    <path>${site.path}</path>
+                    <merge>true</merge>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <skip>true</skip>
+                    <skipDeploy>true</skipDeploy>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
         <dependency>
