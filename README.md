@@ -7,7 +7,7 @@ This project is based on a learning incentive for implementing a system for secu
 
 ### Build it yourself
 1. Clone the repository via ```git clone https://github.com/nilomatix/crypto-editor.git```
-2. Build the jar using ```mvn jfx:jar``` or run it directly via ```mvn jfx:run```
+2. Build the jar using Maven via ```mvn jfx:jar``` or run it directly via ```mvn jfx:run```
 
 ### Download compiled release
 (coming soon)
@@ -33,5 +33,5 @@ Currently supported padding methods are
 * PKCS7
 
 You also have the possiblity to save files without encryption.
-<hr>
-[Source Documentation](http://nilomatix.github.io/crypto-editor/snapshot)
+## Documentation
+[Latest Snapshot](http://nilomatix.github.io/crypto-editor/doc/snapshot)
