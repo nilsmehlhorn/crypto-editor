@@ -1,13 +1,14 @@
 package org.hsd.cryptoeditor.crypto.grapher;
 
 import org.hsd.cryptoeditor.crypto.encryption.Encryption;
+import org.hsd.cryptoeditor.crypto.encryption.EncryptionPadding;
 import org.hsd.cryptoeditor.crypto.exception.CryptographerException;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import java.io.InputStream;
+import java.security.Key;
 
 /**
  * Created by nils on 5/16/16.
@@ -16,7 +17,7 @@ public class BCCryptographer implements Cryptographer {
 
     private Encryption encryption;
 
-    private SecretKey key;
+    private Key key;
 
     public CipherInputStream getEncryptor(InputStream in) throws CryptographerException {
         try {
@@ -38,17 +39,10 @@ public class BCCryptographer implements Cryptographer {
         if (encryption == null) {
             throw new IllegalStateException("BCCryptographer needs to be initialized with a valid encryption");
         }
-        String instanceCall = encryption.getType().getName();
-        if(!encryption.getType().isStreamType()) {
-            instanceCall += "/" + encryption.getMode().getName();
-            if(!encryption.getMode().isStreamMode()) {
-                instanceCall += "/" + encryption.getPadding();
-            }
-        }
-        Cipher c = Cipher.getInstance(instanceCall, "BC");
+        Cipher c = Cipher.getInstance(parseInstanceCall(encryption), "BC");
 
-        if(encryption.getMode().isVectorMode()) {
-            if(encryption.getInitializationVector() != null) {
+        if (encryption.getMode().isVectorMode()) {
+            if (encryption.getInitializationVector() != null) {
                 c.init(cipherMode, key, new IvParameterSpec(encryption.getInitializationVector()));
             } else {
                 c.init(cipherMode, key);
@@ -60,7 +54,21 @@ public class BCCryptographer implements Cryptographer {
         return c;
     }
 
-    public BCCryptographer(Encryption encryption, SecretKey key) {
+    private String parseInstanceCall(Encryption encryption) {
+        String instanceCall = encryption.getType().getName();
+        if (encryption.getType().isPBEType() || encryption.getType().isStreamType()) {
+            return instanceCall;
+        } else {
+            instanceCall += "/" + encryption.getMode().getName();
+            if (encryption.getMode().isStreamMode()) {
+                encryption.setPadding(EncryptionPadding.NoPadding);
+            }
+            instanceCall += "/" + encryption.getPadding();
+            return instanceCall;
+        }
+    }
+
+    public BCCryptographer(Encryption encryption, Key key) {
         this.encryption = encryption;
         this.key = key;
     }
@@ -69,7 +77,7 @@ public class BCCryptographer implements Cryptographer {
         this.encryption = encryption;
     }
 
-    public void setKey(SecretKey key) {
+    public void setKey(Key key) {
         this.key = key;
     }
 }

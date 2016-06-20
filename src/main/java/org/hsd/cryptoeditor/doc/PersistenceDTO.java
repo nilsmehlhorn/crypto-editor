@@ -1,4 +1,4 @@
-package org.hsd.cryptoeditor.model;
+package org.hsd.cryptoeditor.doc;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;

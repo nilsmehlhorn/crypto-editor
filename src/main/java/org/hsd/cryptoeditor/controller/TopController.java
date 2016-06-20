@@ -3,9 +3,9 @@ package org.hsd.cryptoeditor.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import org.hsd.cryptoeditor.crypto.encryption.Encryption;
-import org.hsd.cryptoeditor.model.Document;
+import org.hsd.cryptoeditor.doc.Document;
 import org.hsd.cryptoeditor.dialog.DialogService;
-import org.hsd.cryptoeditor.logic.DocumentService;
+import org.hsd.cryptoeditor.doc.DocumentService;
 
 import java.util.Optional;
 

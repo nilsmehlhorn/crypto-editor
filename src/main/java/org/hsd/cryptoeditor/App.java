@@ -37,7 +37,7 @@ public class App extends Application {
      * @throws IOException when resource for main view can not be loaded
      */
     public void start(Stage primaryStage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/main_view.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/main.fxml"));
         Scene scene = new Scene(root, 600, 400);
         primaryStage.setTitle("Crypto Editor");
         primaryStage.setScene(scene);

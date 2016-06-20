@@ -3,8 +3,8 @@ package org.hsd.cryptoeditor.controller;
 import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
-import org.hsd.cryptoeditor.model.Document;
-import org.hsd.cryptoeditor.logic.DocumentService;
+import org.hsd.cryptoeditor.doc.Document;
+import org.hsd.cryptoeditor.doc.DocumentService;
 
 /**
  * Created by nils on 5/1/16.

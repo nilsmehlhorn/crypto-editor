@@ -4,6 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
+import org.hsd.cryptoeditor.CryptoEditorException;
 import org.hsd.cryptoeditor.crypto.encryption.Encryption;
 
 import java.io.File;
@@ -45,7 +46,7 @@ public class DialogService {
     public Optional<Encryption> showEncryptionDialog(Encryption currentEncryption) {
         Dialog<Encryption> encryptionDialog = new Dialog<>();
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dialog/encryption_dialog_view.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dialog/encryption_dialog.fxml"));
             encryptionDialog.setTitle("Encryption");
             encryptionDialog.getDialogPane().setContent(loader.load());
             encryptionDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
@@ -57,9 +58,26 @@ public class DialogService {
             });
             return encryptionDialog.showAndWait();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new CryptoEditorException("Unable to load view-resource", e);
         }
-        return null;
+    }
+
+    public Optional<String> showPasswordDialog() {
+        Dialog<String> passwordDialog = new Dialog<>();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dialog/password_dialog.fxml"));
+            passwordDialog.setTitle("Password");
+            passwordDialog.getDialogPane().setContent(loader.load());
+            passwordDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+            PasswordDialogController controller = loader.getController();
+            passwordDialog.setResultConverter(buttonType -> {
+                ButtonBar.ButtonData data = buttonType == null ? null : buttonType.getButtonData();
+                return data == ButtonBar.ButtonData.OK_DONE ? controller.getPassword() : null;
+            });
+            return passwordDialog.showAndWait();
+        } catch (IOException e) {
+            throw new CryptoEditorException("Unable to load view-resource", e);
+        }
     }
 
     /////

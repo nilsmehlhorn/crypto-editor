@@ -1,12 +1,14 @@
-package org.hsd.cryptoeditor.model;
+package org.hsd.cryptoeditor.doc;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.hsd.cryptoeditor.CryptoEditorException;
 import org.hsd.cryptoeditor.crypto.encryption.Encryption;
 import org.hsd.cryptoeditor.crypto.encryption.EncryptionType;
 
 import java.io.File;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by nils on 5/1/16.
@@ -49,5 +51,25 @@ public class Document implements Serializable {
 
     public void setEncryption(Encryption encryption) {
         this.encryption = encryption;
+    }
+
+    public String getContent() {
+        return content.get();
+    }
+
+    public StringProperty contentProperty() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content.set(content);
+    }
+
+    public byte[] getContentBytes() {
+        try {
+            return this.content.get().getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new CryptoEditorException(e);
+        }
     }
 }

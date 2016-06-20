@@ -19,7 +19,11 @@ public class Encryption {
 
     public Encryption(EncryptionType type) {
         this.type = type;
-        this.mode = EncryptionMode.ECB;
+        if(type.equals(EncryptionType.SHA_128BIT_AES_CBC_BC) || type.equals(EncryptionType.SHA_256BIT_AES_CBC_BC)) {
+            this.mode = EncryptionMode.CBC;
+        } else {
+            this.mode = EncryptionMode.ECB;
+        }
     }
 
     public List<EncryptionPadding> getPossiblePaddings() {

@@ -1,51 +1,79 @@
 package org.hsd.cryptoeditor.crypto;
 
 import org.hsd.cryptoeditor.crypto.encryption.Encryption;
-import org.hsd.cryptoeditor.crypto.encryption.EncryptionMode;
 import org.hsd.cryptoeditor.crypto.encryption.EncryptionType;
 import org.hsd.cryptoeditor.crypto.grapher.BCCryptographer;
 import org.hsd.cryptoeditor.crypto.grapher.Cryptographer;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 /**
  * Created by nils on 5/11/16.
  */
 public class CryptoService {
 
+    private static final int ITERATIONS = 1024;
+
     public Encryption getEncryption(EncryptionType type) {
-        Encryption encryption = null;
-        switch (type) {
-            case NONE:
-                encryption = new Encryption(EncryptionType.NONE);
-                break;
-            case DES:
-                encryption = new Encryption(EncryptionType.DES);
-                break;
-            case AES:
-                encryption = new Encryption(EncryptionType.AES);
-                break;
-            case ARC4:
-                encryption = new Encryption(EncryptionType.ARC4);
-                break;
-        }
-        encryption.setMode(EncryptionMode.ECB);
-        return encryption;
+        return new Encryption(type);
     }
 
-    public Cryptographer getCryptographer(Encryption encryption) {
-        SecretKey key = StoreService.getInstance().loadKey(encryption.getType().toString());
-        if(key == null) {
-            try {
-                key = KeyGenerator.getInstance(String.valueOf(encryption.getType())).generateKey();
-                StoreService.getInstance().storeKey(encryption.getType().toString(), key);
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
+    public Cryptographer getCryptographer(Encryption encryption, char[] password) {
+        Key key = null;
+        if (encryption.getType().isPBEType()) {
+            if (password == null) {
+                throw new IllegalArgumentException("A password is required for PBE types");
             }
+            key = getPBEKey(password, encryption);
+        } else {
+            key = getStorageKey(encryption);
         }
         return new BCCryptographer(encryption, key);
+    }
+
+    private Key getStorageKey(Encryption encryption) {
+        Key key = loadKey(encryption.getType().getName());
+        return key != null ? key : generateKey(encryption.getType().getName());
+    }
+
+    private Key getPBEKey(char[] password, Encryption encryption) {
+        if (!encryption.getType().isPBEType()) {
+            throw new IllegalArgumentException("Can only generate PBE-keys for PBE encryption types");
+        }
+        Key key = null;
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] salt = new byte[] {
+                0x7d, 0x60, 0x43, 0x5f,
+                0x02, (byte)0xe9, (byte)0xe0, (byte)0xae };
+        PBEKeySpec pbeKeySpec = new PBEKeySpec(password, salt, ITERATIONS);
+        try {
+            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(encryption.getType().getName(), "BC");
+            key = keyFactory.generateSecret(pbeKeySpec);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return key;
+    }
+
+    private Key loadKey(String algorithm) {
+        return StoreService.getInstance().loadKey(algorithm);
+    }
+
+    private Key generateKey(String algorithm) {
+        SecretKey key = null;
+        try {
+            key = KeyGenerator.getInstance(algorithm).generateKey();
+            StoreService.getInstance().storeKey(algorithm, key);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return key;
     }
 
 
