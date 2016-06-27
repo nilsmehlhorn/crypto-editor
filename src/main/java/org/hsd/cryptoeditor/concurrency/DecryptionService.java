@@ -25,12 +25,10 @@ public class DecryptionService extends Service<byte[]> {
 
     public void setEncryption(Encryption encryption) {
         this.encryption = encryption;
-        if (encryption.getType().isPBEType()) {
-            Optional<String> passwordOptional = DialogService.getInstance().showPasswordDialog();
-            if (passwordOptional.isPresent()) {
-                this.password = passwordOptional.get().toCharArray();
-            }
-        }
+    }
+
+    public void setPassword(char[] password) {
+        this.password = password;
     }
 
     public void setCipherInput(InputStream contentInput) {

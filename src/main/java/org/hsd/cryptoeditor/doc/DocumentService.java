@@ -15,6 +15,7 @@ import org.hsd.cryptoeditor.crypto.grapher.Cryptographer;
 import org.hsd.cryptoeditor.dialog.DialogService;
 
 import java.io.*;
+import java.util.Optional;
 
 /**
  * Created by nils on 5/1/16.
@@ -22,6 +23,8 @@ import java.io.*;
 public class DocumentService {
 
     private ObjectProperty<Document> current = new SimpleObjectProperty<Document>();
+
+    private DialogService dialogService = DialogService.getInstance();
 
     public void saveCurrent(final File file) {
         save(current.get(), file);
@@ -33,6 +36,7 @@ public class DocumentService {
         dto.setEncryptionType(document.getEncryption().getType());
         dto.setEncryptionMode(document.getEncryption().getMode());
         dto.setEncryptionPadding(document.getEncryption().getPadding());
+        dto.setPbeType(document.getEncryption().getPbeType());
         // encrypt content
         EncryptionService encryptionService = new EncryptionService();
         encryptionService.setEncryption(document.getEncryption());
@@ -49,16 +53,20 @@ public class DocumentService {
             saveService.setPersistenceDTO(dto);
             saveService.setOnSucceeded(saveEvent -> document.setFile(file));
             saveService.setOnFailed(failEvent -> {
-                DialogService.getInstance().showErrorDialog("Could not save file", "An error occured while saving the file");
+                dialogService.showErrorDialog("Could not save file", "An error occured while saving the file");
                 throw new CryptoEditorException(saveService.getException());
             });
             saveService.start();
         });
         encryptionService.setOnFailed(failEvent -> {
-            DialogService.getInstance().showErrorDialog("Could not encrypt contents", "An error occured during encryption");
+            dialogService.showErrorDialog("Could not encrypt contents", "An error occured during encryption");
             throw new CryptoEditorException(encryptionService.getException());
         });
-        encryptionService.start();
+        Optional<String> optional = dialogService.showPasswordDialog();
+        if(optional.isPresent()) {
+            encryptionService.setPassword(optional.get().toCharArray());
+            encryptionService.start();
+        }
     }
 
     public void load(File file) {
@@ -80,6 +88,7 @@ public class DocumentService {
         Document document = new Document();
         Encryption encryption = CryptoService.getInstance().getEncryption(dto.getEncryptionType());
         encryption.setMode(dto.getEncryptionMode());
+        encryption.setPbeType(dto.getPbeType());
         encryption.setPadding(dto.getEncryptionPadding());
         if (encryption.getMode().isVectorMode()) {
             encryption.setInitializationVector(dto.getInitializationVector());
@@ -91,10 +100,14 @@ public class DocumentService {
         decryptionService.setEncryption(document.getEncryption());
         decryptionService.setOnSucceeded(event -> document.setText(new String(decryptionService.getValue())));
         decryptionService.setOnFailed(failEvent -> {
-            DialogService.getInstance().showErrorDialog("Could not decrypt contents", "An error occured during decryption");
+            dialogService.showErrorDialog("Could not decrypt contents", "An error occured during decryption");
             throw new CryptoEditorException(decryptionService.getException());
         });
-        decryptionService.start();
+        Optional<String> optional = dialogService.showPasswordDialog();
+        if(optional.isPresent()) {
+            decryptionService.setPassword(optional.get().toCharArray());
+            decryptionService.start();
+        }
         return document;
     }
 

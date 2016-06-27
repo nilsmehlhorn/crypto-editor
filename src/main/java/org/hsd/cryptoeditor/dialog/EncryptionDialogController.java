@@ -7,10 +7,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import org.hsd.cryptoeditor.crypto.CryptoService;
-import org.hsd.cryptoeditor.crypto.encryption.Encryption;
-import org.hsd.cryptoeditor.crypto.encryption.EncryptionMode;
-import org.hsd.cryptoeditor.crypto.encryption.EncryptionPadding;
-import org.hsd.cryptoeditor.crypto.encryption.EncryptionType;
+import org.hsd.cryptoeditor.crypto.encryption.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,9 +20,7 @@ import java.util.stream.Collectors;
  */
 public class EncryptionDialogController {
     @FXML
-    private ComboBox<EncryptionType> pbeDropdown;
-    @FXML
-    private TabPane tabPane;
+    private ComboBox<PBEType> pbeDropdown;
     @FXML
     private ListView<EncryptionType> encryptionTypeList;
     @FXML
@@ -54,7 +49,7 @@ public class EncryptionDialogController {
             selected.setPadding(newValue);
         });
         pbeDropdown.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            selected = mapping.get(newValue);
+            selected.setPbeType(newValue);
         });
     }
 
@@ -62,15 +57,9 @@ public class EncryptionDialogController {
         for (EncryptionType type : EncryptionType.values()) {
             mapping.put(type, CryptoService.getInstance().getEncryption(type));
         }
-        List<EncryptionType> pbeTypes = Arrays.stream(EncryptionType.values())
-                .filter(EncryptionType::isPBEType)
-                .collect(Collectors.toList());
-        List<EncryptionType> plainTypes = Arrays.stream(EncryptionType.values())
-                .filter(type -> !pbeTypes.contains(type))
-                .collect(Collectors.toList());
-        encryptionTypeList.setItems(FXCollections.observableList(plainTypes));
+        encryptionTypeList.setItems(FXCollections.observableArrayList(EncryptionType.values()));
         blockModeDropdown.setItems(FXCollections.observableList(Arrays.asList(EncryptionMode.values())));
-        pbeDropdown.setItems(FXCollections.observableArrayList(pbeTypes));
+        pbeDropdown.setItems(FXCollections.observableArrayList(PBEType.values()));
     }
 
     public Encryption getEncryption() {
@@ -79,13 +68,7 @@ public class EncryptionDialogController {
 
     public void setEncryption(Encryption encryption) {
         mapping.put(encryption.getType(), encryption);
-        if (encryption.getType().isPBEType()) {
-            tabPane.getSelectionModel().selectLast();
-            pbeDropdown.getSelectionModel().select(encryption.getType());
-        } else {
-            tabPane.getSelectionModel().selectFirst();
-            encryptionTypeList.getSelectionModel().select(encryption.getType());
-        }
+        encryptionTypeList.getSelectionModel().select(encryption.getType());
     }
 
     private void switchToMode(EncryptionMode mode) {

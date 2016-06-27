@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hsd.cryptoeditor.crypto.encryption.EncryptionMode;
 import org.hsd.cryptoeditor.crypto.encryption.EncryptionPadding;
 import org.hsd.cryptoeditor.crypto.encryption.EncryptionType;
+import org.hsd.cryptoeditor.crypto.encryption.PBEType;
 
 /**
  * Created by nils on 5/16/16.
@@ -17,6 +18,8 @@ public class PersistenceDTO {
 
     private EncryptionMode encryptionMode;
 
+    private PBEType pbeType;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private byte[] initializationVector;
 
@@ -28,6 +31,14 @@ public class PersistenceDTO {
 
     public void setInitializationVector(byte[] initializationVector) {
         this.initializationVector = initializationVector;
+    }
+
+    public PBEType getPbeType() {
+        return pbeType;
+    }
+
+    public void setPbeType(PBEType pbeType) {
+        this.pbeType = pbeType;
     }
 
     public byte[] getContent() {

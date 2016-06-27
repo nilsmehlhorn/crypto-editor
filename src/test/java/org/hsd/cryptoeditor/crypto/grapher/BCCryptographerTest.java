@@ -43,7 +43,7 @@ public class BCCryptographerTest {
                 52, -111, -91, -118,
                 0, 121, 110, 35
         };
-        Cryptographer cryptographer = new BCCryptographer(encryption, new SecretKeySpec(keyBytes, "AES"));
+        Cryptographer cryptographer = new BCCryptographer(encryption, "123".toCharArray());
         InputStream encryptor = cryptographer.getEncryptor(new ByteArrayInputStream(input));
         byte[] result = IOUtils.toByteArray(encryptor);
         String expectedHex = "9f59ae43693c954ccf530da5cf0205ac";

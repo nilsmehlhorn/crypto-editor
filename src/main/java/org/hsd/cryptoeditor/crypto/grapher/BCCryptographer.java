@@ -2,22 +2,28 @@ package org.hsd.cryptoeditor.crypto.grapher;
 
 import org.hsd.cryptoeditor.crypto.encryption.Encryption;
 import org.hsd.cryptoeditor.crypto.encryption.EncryptionPadding;
+import org.hsd.cryptoeditor.crypto.encryption.PBEType;
 import org.hsd.cryptoeditor.crypto.exception.CryptographerException;
 
-import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
+import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.PBEParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.InputStream;
+import java.security.AlgorithmParameters;
 import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 
 /**
  * Created by nils on 5/16/16.
  */
 public class BCCryptographer implements Cryptographer {
 
+    private final char[] password;
     private Encryption encryption;
-
-    private Key key;
 
     public CipherInputStream getEncryptor(InputStream in) throws CryptographerException {
         try {
@@ -41,6 +47,15 @@ public class BCCryptographer implements Cryptographer {
         }
         Cipher c = Cipher.getInstance(parseInstanceCall(encryption), "BC");
 
+        byte[] salt = new byte[]{
+                0x7d, 0x60, 0x43, 0x5f,
+                0x02, (byte) 0xe9, (byte) 0xe0, (byte) 0xae};
+
+        SecretKeyFactory factory = SecretKeyFactory.getInstance(encryption.getPbeType().getName());
+        KeySpec spec = new PBEKeySpec(password, salt, 65536, 256);
+        SecretKey tmp = factory.generateSecret(spec);
+        SecretKey key = new SecretKeySpec(tmp.getEncoded(), encryption.getType().getName());
+
         if (encryption.getMode().isVectorMode()) {
             if (encryption.getInitializationVector() != null) {
                 c.init(cipherMode, key, new IvParameterSpec(encryption.getInitializationVector()));
@@ -56,7 +71,7 @@ public class BCCryptographer implements Cryptographer {
 
     private String parseInstanceCall(Encryption encryption) {
         String instanceCall = encryption.getType().getName();
-        if (encryption.getType().isPBEType() || encryption.getType().isStreamType()) {
+        if (encryption.getType().isStreamType()) {
             return instanceCall;
         } else {
             instanceCall += "/" + encryption.getMode().getName();
@@ -68,16 +83,12 @@ public class BCCryptographer implements Cryptographer {
         }
     }
 
-    public BCCryptographer(Encryption encryption, Key key) {
+    public BCCryptographer(Encryption encryption, char[] password) {
         this.encryption = encryption;
-        this.key = key;
+        this.password = password;
     }
 
     public void setEncryption(Encryption encryption) {
         this.encryption = encryption;
-    }
-
-    public void setKey(Key key) {
-        this.key = key;
     }
 }

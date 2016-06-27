@@ -17,13 +17,11 @@ public class Encryption {
 
     private byte[] initializationVector;
 
+    private PBEType pbeType;
+
     public Encryption(EncryptionType type) {
         this.type = type;
-        if(type.equals(EncryptionType.SHA_128BIT_AES_CBC_BC) || type.equals(EncryptionType.SHA_256BIT_AES_CBC_BC)) {
-            this.mode = EncryptionMode.CBC;
-        } else {
-            this.mode = EncryptionMode.ECB;
-        }
+        this.mode = EncryptionMode.ECB;
     }
 
     public List<EncryptionPadding> getPossiblePaddings() {
@@ -69,5 +67,13 @@ public class Encryption {
 
     public void setInitializationVector(byte[] initializationVector) {
         this.initializationVector = initializationVector;
+    }
+
+    public PBEType getPbeType() {
+        return pbeType;
+    }
+
+    public void setPbeType(PBEType pbeType) {
+        this.pbeType = pbeType;
     }
 }
