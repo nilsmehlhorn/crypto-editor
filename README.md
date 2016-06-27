@@ -34,4 +34,4 @@ Currently supported padding methods are
 
 You also have the possiblity to save files without encryption.
 ## Documentation
-[Latest Snapshot](http://nilomatix.github.io/crypto-editor/doc/snapshot)
+[Latest Snapshot](http://nilsmehlhorn.github.io/crypto-editor/doc/snapshot)
