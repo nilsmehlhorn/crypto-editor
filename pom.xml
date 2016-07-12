@@ -13,14 +13,14 @@
 
     <groupId>org.hsd</groupId>
     <artifactId>crypto-editor</artifactId>
-    <version>0.1</version>
-    <url>https://github.com/nilomatix/crypto-editor</url>
+    <version>0.2</version>
+    <url>https://github.com/nilsmehlhorn/crypto-editor</url>
 
 
     <scm>
-        <url>https://github.com/nilomatix/crypto-editor</url>
-        <connection>scm:git:git://github.com//nilomatix/crypto-editor.git</connection>
-        <developerConnection>scm:git:git@github.com:nilomatix/crypto-editor.git</developerConnection>
+        <url>https://github.com/nilsmehlhorn/crypto-editor</url>
+        <connection>scm:git:git://github.com//nilsmehlhorn/crypto-editor.git</connection>
+        <developerConnection>scm:git:git@github.com:nilsmehlhorn/crypto-editor.git</developerConnection>
     </scm>
 
 
@@ -96,12 +96,12 @@
                 </executions>
                 <configuration>
                     <repositoryName>crypto-editor</repositoryName>
-                    <repositoryOwner>nilomatix</repositoryOwner>
+                    <repositoryOwner>nilsmehlhorn</repositoryOwner>
 
                     <server>github</server>
                     <outputDirectory>${basedir}/target/doc/doxygen</outputDirectory>
 
-                    <message>Building documentation site for crypto-editor</message>
+                    <message>Building documentation site for crypto-editor (${project.version})</message>
                     <path>${site.path}</path>
                     <merge>true</merge>
                 </configuration>

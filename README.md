@@ -14,6 +14,8 @@ This project is based on a learning incentive for implementing a system for secu
 
 ## Cryptography
 
+### Symmetric Encryption
+
 Currently supported ciphers are
 * AES
 * DES
@@ -32,6 +34,21 @@ Currently supported padding methods are
 * PKCS5
 * PKCS7
 
+### Password Based Encryption
+
+Currently supported schemes are
+* 128Bit AES in CBC mode with SHA1
+* 256Bit AES in CBC mode with SHA1
+* DES with MD5
+* 40Bit ARC4 with SHA1
+
+### Asymmetric Encryption
+
+At the moment only *RSA* encryption is supported
+
+---
+
 You also have the possiblity to save files without encryption.
 ## Documentation
 [Latest Snapshot](http://nilsmehlhorn.github.io/crypto-editor/doc/snapshot)
+[Release 0.2](http://nilsmehlhorn.github.io/crypto-editor/doc/release/0.2)
