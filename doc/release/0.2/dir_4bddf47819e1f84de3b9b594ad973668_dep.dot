@@ -1,0 +1,10 @@
+digraph "src/main/java/org/hsd/cryptoeditor/doc" {
+  bgcolor=transparent;
+  compound=true
+  node [ fontsize="10", fontname="FreeSans"];
+  edge [ labelfontsize="10", labelfontname="FreeSans"];
+  subgraph clusterdir_54960fc56f01806986d042fbc70fce4f {
+    graph [ bgcolor="#ddddee", pencolor="black", label="cryptoeditor" fontname="FreeSans", fontsize="10", URL="dir_54960fc56f01806986d042fbc70fce4f.html"]
+  dir_4bddf47819e1f84de3b9b594ad973668 [shape=box, label="doc", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_4bddf47819e1f84de3b9b594ad973668.html"];
+  }
+}
