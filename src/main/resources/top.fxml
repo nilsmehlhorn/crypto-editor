@@ -9,7 +9,7 @@
             <MenuItem text="Open" onAction="#open"></MenuItem>
             <MenuItem text="Save" accelerator="Ctrl+S" onAction="#save"></MenuItem>
             <MenuItem text="Save as" accelerator="Ctrl+Shift+S" onAction="#saveAs" fx:id="saveAsItem"></MenuItem>
-            <MenuItem text="Encryption..." onAction="#encryption"></MenuItem>
+            <MenuItem text="Encryption..." accelerator="Ctrl+E" onAction="#encryption"></MenuItem>
         </items>
     </Menu>
     <Menu fx:id="editMenu" text="Edit">

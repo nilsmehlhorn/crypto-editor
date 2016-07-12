@@ -1,7 +1,10 @@
 package org.hsd.cryptoeditor.dialog;
 
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import org.hsd.cryptoeditor.CryptoEditorException;
@@ -11,8 +14,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
+
 /**
- * Created by nils on 5/1/16.
+ * Service for handling dailog based interactions with the user.
  */
 public class DialogService {
 
@@ -22,27 +26,53 @@ public class DialogService {
         this.window = window;
     }
 
+    /**
+     * Displays a file chooser dialog for opening a file.
+     *
+     * @param title title of the dialog window
+     * @return user chosen file
+     */
     public File showOpenDialog(String title) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(title);
         return fileChooser.showOpenDialog(window);
     }
 
+    /**
+     * Displays a file chooser dialog for saving a file.
+     *
+     * @param title title of the dialog window
+     * @return user chosen file
+     */
     public File showSaveDialog(String title) {
         FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialFileName("untitled.json");
         fileChooser.setTitle(title);
         return fileChooser.showSaveDialog(window);
     }
 
+    /**
+     * Displays an error dialog.
+     *
+     * @param header  title of the error message
+     * @param content text of the error message
+     */
     public void showErrorDialog(String header, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setHeaderText(header);
-        alert.setContentText(content);
-
+        Label label = new Label(content);
+        label.setWrapText(true);
+        alert.getDialogPane().setContent(label);
         alert.showAndWait();
     }
 
+    /**
+     * Displays a dialog for encryption selection.
+     *
+     * @param currentEncryption currently selected encryption to initialize the dialog with
+     * @return optional resolving to the now selected encryption
+     */
     public Optional<Encryption> showEncryptionDialog(Encryption currentEncryption) {
         Dialog<Encryption> encryptionDialog = new Dialog<>();
         try {
@@ -62,6 +92,11 @@ public class DialogService {
         }
     }
 
+    /**
+     * Displays a password input dialog.
+     *
+     * @return optional resolving to the entered password
+     */
     public Optional<String> showPasswordDialog() {
         Dialog<String> passwordDialog = new Dialog<>();
         try {
@@ -85,7 +120,7 @@ public class DialogService {
     private static final DialogService instance = new DialogService();
 
     private DialogService() {
-        if(instance != null) {
+        if (instance != null) {
             throw new IllegalStateException("Already instantiated");
         }
     }

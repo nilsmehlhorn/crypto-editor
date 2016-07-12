@@ -11,9 +11,17 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 
 /**
- * Created by nils on 5/1/16.
+ * Model class for a document, which contains ...
+ * <ul>
+ * <li>a file associated with the document</li>
+ * <li>the encryption in use for the document</li>
+ * <li>a string property containing the document contents</li>
+ * <li>a boolean indicating if the document has unsaved changes</li>
+ * </ul>
+ *
+ * @see Encryption
  */
-public class Document implements Serializable {
+public class Document {
 
     private File file;
 
@@ -21,8 +29,29 @@ public class Document implements Serializable {
 
     private StringProperty content = new SimpleStringProperty();
 
+    private boolean hasUnsavedChanges = false;
+
     public Document() {
         encryption = new Encryption(EncryptionType.NONE);
+    }
+
+    /**
+     * @return byte representation of the document contents (serialized with charset UTF-8)
+     */
+    public byte[] getContentBytes() {
+        try {
+            return this.content.get().getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new CryptoEditorException(e);
+        }
+    }
+
+    public void setHasUnsavedChanges(boolean hasUnsavedChanges) {
+        this.hasUnsavedChanges = hasUnsavedChanges;
+    }
+
+    public boolean hasUnsavedChanges() {
+        return hasUnsavedChanges;
     }
 
     public String getText() {
@@ -65,11 +94,4 @@ public class Document implements Serializable {
         this.content.set(content);
     }
 
-    public byte[] getContentBytes() {
-        try {
-            return this.content.get().getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new CryptoEditorException(e);
-        }
-    }
 }

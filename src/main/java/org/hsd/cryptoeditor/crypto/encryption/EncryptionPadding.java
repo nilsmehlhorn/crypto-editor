@@ -1,10 +1,8 @@
 package org.hsd.cryptoeditor.crypto.encryption;
 
 /**
- * Created by nils on 5/20/16.
+ * Enumeration of cryptographic padding methods.
  */
-
-
 public enum EncryptionPadding {
     NoPadding("NoPadding"),
     PKCS5Padding("PKCS5Padding"),
@@ -16,6 +14,9 @@ public enum EncryptionPadding {
         this.name = name;
     }
 
+    /**
+     * @return Bouncy Castle conform identifier
+     */
     public String getName() {
         return name;
     }

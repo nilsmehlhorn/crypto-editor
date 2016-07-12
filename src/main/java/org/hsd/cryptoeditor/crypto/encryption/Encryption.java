@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by nils on 5/11/16.
+ * Model class representing an encryption algorithm with all its public parameters.
  */
 public class Encryption {
 
@@ -15,15 +15,29 @@ public class Encryption {
 
     private EncryptionPadding padding;
 
+    private byte[] salt;
+
     private byte[] initializationVector;
 
-    private PBEType pbeType;
+    private byte[] publicKey;
 
+    /**
+     * Default constructor for initializing an algorithm based on an encryption type.
+     *
+     * @param type encryption type of algorithm
+     */
     public Encryption(EncryptionType type) {
         this.type = type;
-        this.mode = EncryptionMode.ECB;
+        if (!type.isPBEType() && !type.isStreamType() && type != EncryptionType.NONE) {
+            this.mode = type.getSupportedModes()[0];
+        }
     }
 
+    /**
+     * Calculates the possible paddings for this encryption by intersecting the supported paddings of the set encryption type and blockmode.
+     *
+     * @return possible paddings for the algorithm
+     */
     public List<EncryptionPadding> getPossiblePaddings() {
         List<EncryptionPadding> possiblePaddings = new ArrayList<>();
         if (type.isStreamType()) {
@@ -35,6 +49,12 @@ public class Encryption {
         return possiblePaddings;
     }
 
+    /**
+     * Sets the padding method of the algorithm.
+     *
+     * @param padding padding method to set
+     * @throws IllegalArgumentException if the passed padding method is not possible for the alogorithm
+     */
     public void setPadding(EncryptionPadding padding) {
         if (padding == null)
             return;
@@ -69,11 +89,19 @@ public class Encryption {
         this.initializationVector = initializationVector;
     }
 
-    public PBEType getPbeType() {
-        return pbeType;
+    public byte[] getSalt() {
+        return salt;
     }
 
-    public void setPbeType(PBEType pbeType) {
-        this.pbeType = pbeType;
+    public void setSalt(byte[] salt) {
+        this.salt = salt;
+    }
+
+    public byte[] getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(byte[] publicKey) {
+        this.publicKey = publicKey;
     }
 }

@@ -7,10 +7,8 @@ import org.hsd.cryptoeditor.crypto.CryptoService;
 import org.hsd.cryptoeditor.crypto.encryption.Encryption;
 import org.hsd.cryptoeditor.crypto.encryption.EncryptionType;
 import org.hsd.cryptoeditor.crypto.grapher.Cryptographer;
-import org.hsd.cryptoeditor.dialog.DialogService;
 
 import java.io.InputStream;
-import java.util.Optional;
 
 /**
  * Created by nils on 6/20/16.

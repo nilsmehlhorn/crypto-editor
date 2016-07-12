@@ -1,7 +1,4 @@
 package org.hsd.cryptoeditor;
-/**
- * Created by nils on 18.04.2016.
- */
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +11,9 @@ import org.hsd.cryptoeditor.dialog.DialogService;
 import java.io.IOException;
 import java.security.Security;
 
+/**
+ * \mainpage Crypto Editor Documentation Index Page
+ */
 public class App extends Application {
 
     /**
@@ -33,6 +33,7 @@ public class App extends Application {
 
     /**
      * Starting method to be called by JavaFX framework
+     *
      * @param primaryStage base stage for ui application
      * @throws IOException when resource for main view can not be loaded
      */

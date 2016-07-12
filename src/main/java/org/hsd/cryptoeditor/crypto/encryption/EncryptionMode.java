@@ -1,9 +1,8 @@
 package org.hsd.cryptoeditor.crypto.encryption;
 
 /**
- * Created by nils on 5/20/16.
+ * Enumeration of cryptographic encryption modes
  */
-
 public enum EncryptionMode {
 
     ECB("ECB", false, false, EncryptionPadding.values()),
@@ -25,18 +24,30 @@ public enum EncryptionMode {
         this.isStreamMode = isStreamMode;
     }
 
+    /**
+     * @return boolean indicating whether the mode is vector based and thus requires an initialization-vector
+     */
     public boolean isVectorMode() {
         return isVectorMode;
     }
 
+    /**
+     * @return boolean indicating whether the mode is stream based and thus does not require padding
+     */
     public boolean isStreamMode() {
         return isStreamMode;
     }
 
+    /**
+     * @return Bouncy Castle conform identifier
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @return padding methods supported by this mode
+     */
     public EncryptionPadding[] getSupportedPaddings() {
         return supportedPaddings;
     }

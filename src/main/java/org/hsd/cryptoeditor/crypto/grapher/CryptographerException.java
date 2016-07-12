@@ -1,7 +1,7 @@
-package org.hsd.cryptoeditor.crypto.exception;
+package org.hsd.cryptoeditor.crypto.grapher;
 
 /**
- * Created by nils on 5/10/16.
+ * Runtime Exception for error handling during cryptographic operations.
  */
 public class CryptographerException extends RuntimeException {
     public CryptographerException(Throwable e) {

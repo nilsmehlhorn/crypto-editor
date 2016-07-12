@@ -6,8 +6,9 @@ import javafx.scene.control.TextArea;
 import org.hsd.cryptoeditor.doc.Document;
 import org.hsd.cryptoeditor.doc.DocumentService;
 
+
 /**
- * Created by nils on 5/1/16.
+ * Controller for handling the editor text-input.
  */
 public class EditorController {
 
@@ -16,6 +17,13 @@ public class EditorController {
 
     private ObjectProperty<Document> documentProperty;
 
+
+    /**
+     * Called by the FXML-Loader after the view is assembled.
+     * Will bind the text-field to the document-property exposed by the document-service.
+     *
+     * @see DocumentService#currentDocumentProperty()
+     */
     @FXML
     public void initialize() {
         DocumentService documentService = DocumentService.getInstance();
@@ -24,8 +32,8 @@ public class EditorController {
         documentProperty.addListener((observable, oldValue, newValue) -> {
             editorField.textProperty().bindBidirectional(newValue.textProperty());
         });
+        editorField.setOnKeyPressed(event -> documentProperty.get().setHasUnsavedChanges(true));
     }
-
 
 
 }

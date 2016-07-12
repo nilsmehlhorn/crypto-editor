@@ -5,11 +5,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hsd.cryptoeditor.crypto.encryption.EncryptionMode;
 import org.hsd.cryptoeditor.crypto.encryption.EncryptionPadding;
 import org.hsd.cryptoeditor.crypto.encryption.EncryptionType;
-import org.hsd.cryptoeditor.crypto.encryption.PBEType;
 
 /**
- * Created by nils on 5/16/16.
+ * Persistence class for serialization of documents.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PersistenceDTO {
 
     private EncryptionType encryptionType;
@@ -18,12 +18,17 @@ public class PersistenceDTO {
 
     private EncryptionMode encryptionMode;
 
-    private PBEType pbeType;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private byte[] initializationVector;
 
+    private byte[] publicKey;
+
     private byte[] content;
+
+    private byte[] hash;
+
+    private byte[] salt;
+
+    ///
 
     public byte[] getInitializationVector() {
         return initializationVector;
@@ -33,12 +38,20 @@ public class PersistenceDTO {
         this.initializationVector = initializationVector;
     }
 
-    public PBEType getPbeType() {
-        return pbeType;
+    public byte[] getPublicKey() {
+        return publicKey;
     }
 
-    public void setPbeType(PBEType pbeType) {
-        this.pbeType = pbeType;
+    public void setPublicKey(byte[] publicKey) {
+        this.publicKey = publicKey;
+    }
+
+    public byte[] getHash() {
+        return hash;
+    }
+
+    public void setHash(byte[] hash) {
+        this.hash = hash;
     }
 
     public byte[] getContent() {
@@ -71,5 +84,13 @@ public class PersistenceDTO {
 
     public void setEncryptionMode(EncryptionMode encryptionMode) {
         this.encryptionMode = encryptionMode;
+    }
+
+    public void setSalt(byte[] salt) {
+        this.salt = salt;
+    }
+
+    public byte[] getSalt() {
+        return salt;
     }
 }

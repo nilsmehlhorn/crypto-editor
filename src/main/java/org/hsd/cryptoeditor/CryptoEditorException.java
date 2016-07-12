@@ -1,7 +1,7 @@
 package org.hsd.cryptoeditor;
 
 /**
- * Created by nils on 6/20/16.
+ * Runtime Exception for general error handling in the application
  */
 public class CryptoEditorException extends RuntimeException {
 

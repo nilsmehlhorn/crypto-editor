@@ -2,66 +2,73 @@ package org.hsd.cryptoeditor.crypto.grapher;
 
 import org.hsd.cryptoeditor.crypto.encryption.Encryption;
 import org.hsd.cryptoeditor.crypto.encryption.EncryptionPadding;
-import org.hsd.cryptoeditor.crypto.encryption.PBEType;
-import org.hsd.cryptoeditor.crypto.exception.CryptographerException;
 
-import javax.crypto.*;
+import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.PBEParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.InputStream;
-import java.security.AlgorithmParameters;
 import java.security.Key;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
+import java.security.KeyPair;
 
 /**
- * Created by nils on 5/16/16.
+ * Cryptographer implementation based on the Bouncy Castle Provider.
+ *
+ * Note that you have to pass keys and key-pairs which work with the Bouncy Castle Provider (preferably created using it).
+ * @see org.bouncycastle.jce.provider.BouncyCastleProvider
  */
 public class BCCryptographer implements Cryptographer {
 
-    private final char[] password;
+    private final static String PROVIDER = "BC";
+
     private Encryption encryption;
 
+    private Key key;
+
+    private KeyPair keyPair;
+
+    /**
+     * @copydoc Cryptographer::getEncryptor()
+     */
+    @Override
     public CipherInputStream getEncryptor(InputStream in) throws CryptographerException {
-        try {
-            return new CipherInputStream(in, buildCipher(Cipher.ENCRYPT_MODE));
-        } catch (Exception e) {
-            throw new CryptographerException(e);
-        }
+        return new CipherInputStream(in, buildCipher(Cipher.ENCRYPT_MODE));
     }
 
+    /**
+     * @copydoc Cryptographer::getDecryptor()
+     */
+    @Override
     public CipherInputStream getDecryptor(InputStream in) throws CryptographerException {
-        try {
-            return new CipherInputStream(in, buildCipher(Cipher.DECRYPT_MODE));
-        } catch (Exception e) {
-            throw new CryptographerException(e);
-        }
+        return new CipherInputStream(in, buildCipher(Cipher.DECRYPT_MODE));
     }
 
-    private Cipher buildCipher(int cipherMode) throws Exception {
+    private Cipher buildCipher(int cipherMode) {
         if (encryption == null) {
             throw new IllegalStateException("BCCryptographer needs to be initialized with a valid encryption");
         }
-        Cipher c = Cipher.getInstance(parseInstanceCall(encryption), "BC");
+        try {
+            return encryption.getType().isAsymmetric() ? buildAsymmetricCipher(cipherMode) : buildSymmetricCipher(cipherMode);
+        } catch (Exception e) {
+            throw new CryptographerException(e);
+        }
+    }
 
-        byte[] salt = new byte[]{
-                0x7d, 0x60, 0x43, 0x5f,
-                0x02, (byte) 0xe9, (byte) 0xe0, (byte) 0xae};
+    private Cipher buildSymmetricCipher(int cipherMode) throws Exception {
+        if (key == null) {
+            throw new IllegalStateException("A valid secret-key is required for a symmetric encryption type");
+        }
+        Cipher c = Cipher.getInstance(parseInstanceCall(encryption), PROVIDER);
 
-        SecretKeyFactory factory = SecretKeyFactory.getInstance(encryption.getPbeType().getName());
-        KeySpec spec = new PBEKeySpec(password, salt, 65536, 256);
-        SecretKey tmp = factory.generateSecret(spec);
-        SecretKey key = new SecretKeySpec(tmp.getEncoded(), encryption.getType().getName());
-
-        if (encryption.getMode().isVectorMode()) {
-            if (encryption.getInitializationVector() != null) {
-                c.init(cipherMode, key, new IvParameterSpec(encryption.getInitializationVector()));
+        if (!encryption.getType().isStreamType() && !encryption.getType().isPBEType()) {
+            if (encryption.getMode().isVectorMode()) {
+                if (encryption.getInitializationVector() != null) {
+                    c.init(cipherMode, key, new IvParameterSpec(encryption.getInitializationVector()));
+                } else {
+                    c.init(cipherMode, key);
+                    encryption.setInitializationVector(c.getIV());
+                }
             } else {
                 c.init(cipherMode, key);
-                encryption.setInitializationVector(c.getIV());
             }
         } else {
             c.init(cipherMode, key);
@@ -69,9 +76,22 @@ public class BCCryptographer implements Cryptographer {
         return c;
     }
 
+    private Cipher buildAsymmetricCipher(int cipherMode) throws Exception {
+        if (keyPair == null) {
+            throw new IllegalStateException("A valid key-pair is required for an asymmetric encryption type");
+        }
+        Cipher c = Cipher.getInstance(encryption.getType() + "/None/NoPadding", PROVIDER);
+        if (cipherMode == Cipher.ENCRYPT_MODE) {
+            c.init(cipherMode, keyPair.getPublic());
+        } else {
+            c.init(cipherMode, keyPair.getPrivate());
+        }
+        return c;
+    }
+
     private String parseInstanceCall(Encryption encryption) {
         String instanceCall = encryption.getType().getName();
-        if (encryption.getType().isStreamType()) {
+        if (encryption.getType().isPBEType() || encryption.getType().isStreamType()) {
             return instanceCall;
         } else {
             instanceCall += "/" + encryption.getMode().getName();
@@ -83,12 +103,30 @@ public class BCCryptographer implements Cryptographer {
         }
     }
 
-    public BCCryptographer(Encryption encryption, char[] password) {
-        this.encryption = encryption;
-        this.password = password;
-    }
-
+    /**
+     * @copydoc Cryptographer::setEncryption()
+     */
+    @Override
     public void setEncryption(Encryption encryption) {
         this.encryption = encryption;
+    }
+
+    /**
+     * @copydoc Cryptographer::setKey()
+     */
+    @Override
+    public void setKey(Key key) {
+        this.key = key;
+    }
+
+    /**
+     * @copydoc Cryptographer::setKeyPair()
+     */
+    @Override
+    public void setKeyPair(KeyPair keyPair) {
+        this.keyPair = keyPair;
+    }
+
+    public BCCryptographer() {
     }
 }

@@ -5,12 +5,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import org.apache.commons.io.IOUtils;
-import org.hsd.cryptoeditor.crypto.CryptoService;
-import org.hsd.cryptoeditor.crypto.encryption.EncryptionType;
-import org.hsd.cryptoeditor.crypto.grapher.Cryptographer;
-import org.hsd.cryptoeditor.dialog.DialogService;
-import org.hsd.cryptoeditor.doc.Document;
 import org.hsd.cryptoeditor.doc.PersistenceDTO;
 
 import java.io.ByteArrayInputStream;
@@ -18,7 +12,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Optional;
 
 public class SaveService extends Service<Void> {
     private StringProperty url = new SimpleStringProperty();

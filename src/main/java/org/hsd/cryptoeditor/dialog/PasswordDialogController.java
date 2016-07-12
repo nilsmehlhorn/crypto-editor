@@ -1,17 +1,19 @@
 package org.hsd.cryptoeditor.dialog;
 
-import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 
 /**
- * Created by nils on 6/20/16.
+ * Controller for handling the password input dialog.
  */
 public class PasswordDialogController {
 
     @FXML
     private PasswordField passwordInput;
 
+    /**
+     * @return the password entered in the dialog
+     */
     public String getPassword() {
         return passwordInput.getText();
     }
