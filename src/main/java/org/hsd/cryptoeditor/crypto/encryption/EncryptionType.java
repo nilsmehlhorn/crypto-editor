@@ -1,12 +1,15 @@
 package org.hsd.cryptoeditor.crypto.encryption;
 
+import static org.hsd.cryptoeditor.crypto.encryption.EncryptionPadding.*;
+import static org.hsd.cryptoeditor.crypto.encryption.EncryptionMode.*;
+
 /**
  * Enumeration of cryptographic encryption types
  */
 public enum EncryptionType {
     NONE("NONE", false, false, false, null, null),
-    AES("AES", false, false, false, EncryptionMode.values(), new EncryptionPadding[]{EncryptionPadding.PKCS7Padding, EncryptionPadding.NoPadding}),
-    DES("DES", false, false, false, EncryptionMode.values(), new EncryptionPadding[]{EncryptionPadding.PKCS5Padding, EncryptionPadding.PKCS7Padding}),
+    AES("AES", false, false, false, EncryptionMode.values(), new EncryptionPadding[]{PKCS7Padding, NoPadding}),
+    DES("DES", false, false, false, new EncryptionMode[]{ECB,CBC,CTR,OFB,CFB}, new EncryptionPadding[]{PKCS5Padding, PKCS7Padding}),
     ARC4("ARC4", true, false, false, null, null),
     PBE_SHA_128BIT_AES_CBC_BC("PBEWITHSHAAND128BITAES-CBC-BC", false, true, false, null, null),
     PBE_SHA_256BIT_AES_CBC_BC("PBEWITHSHAAND256BITAES-CBC-BC", false, true, false, null, null),

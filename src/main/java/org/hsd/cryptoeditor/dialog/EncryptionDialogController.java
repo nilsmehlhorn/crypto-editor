@@ -87,7 +87,6 @@ public class EncryptionDialogController {
                 .filter(type -> !asymmetricTypes.contains(type))
                 .collect(Collectors.toList());
         symmetricTypeList.setItems(FXCollections.observableList(symmetricTypes));
-        blockModeDropdown.setItems(FXCollections.observableList(Arrays.asList(EncryptionMode.values())));
         pbeDropdown.setItems(FXCollections.observableArrayList(pbeTypes));
         asymmetricDropdown.setItems(FXCollections.observableArrayList(asymmetricTypes));
     }
@@ -116,6 +115,7 @@ public class EncryptionDialogController {
     }
 
     private void switchToMode(EncryptionMode mode) {
+        if(mode == null) return;
         selected.setMode(mode);
         if (mode.isStreamMode()) {
             paddingDropdown.setDisable(true);
@@ -134,6 +134,7 @@ public class EncryptionDialogController {
             blockModeDropdown.setDisable(false);
             paddingDropdown.setDisable(false);
             // update possible modes&paddings
+            blockModeDropdown.setItems(FXCollections.observableArrayList(selected.getType().getSupportedModes()));
             blockModeDropdown.getSelectionModel().select(selected.getMode());
             paddingDropdown.setItems(FXCollections.observableList(selected.getPossiblePaddings()));
             paddingDropdown.getSelectionModel().select(selected.getPadding());

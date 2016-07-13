@@ -44,6 +44,7 @@ public class Encryption {
             possiblePaddings.add(EncryptionPadding.NoPadding);
         } else {
             possiblePaddings.addAll(Arrays.asList(type.getSupportedPaddings()));
+            possiblePaddings.addAll(Arrays.asList(mode.getSupportedPaddings()));
             possiblePaddings.retainAll(Arrays.asList(mode.getSupportedPaddings()));
         }
         return possiblePaddings;
