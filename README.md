@@ -6,7 +6,7 @@ This project is based on a learning incentive for implementing a system for secu
 ## Installation
 
 ### Build it yourself
-1. Clone the repository via ```git clone https://github.com/nilomatix/crypto-editor.git```
+1. Clone the repository via ```git clone https://github.com/nilsmehlhorn/crypto-editor.git```
 2. Build the jar using Maven via ```mvn jfx:jar``` or run it directly via ```mvn jfx:run```
 
 ### Download compiled release
