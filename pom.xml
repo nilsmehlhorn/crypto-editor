@@ -32,13 +32,13 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <site.path>doc/snapshot</site.path>
+                <site.path>snapshot</site.path>
             </properties>
         </profile>
         <profile>
             <id>release</id>
             <properties>
-                <site.path>doc/release/${project.version}</site.path>
+                <site.path>release/${project.version}</site.path>
             </properties>
         </profile>
     </profiles>
@@ -63,6 +63,28 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.7.201606060606</version>
+                <configuration>
+                    <outputDirectory>${basedir}/target/site/coverage</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>com.soebes.maven.plugins</groupId>
                 <artifactId>doxygen-maven-plugin</artifactId>
                 <version>1.1.0</version>
@@ -78,7 +100,7 @@
                     <alphabeticalIndex>true</alphabeticalIndex>
                     <generateHtml>true</generateHtml>
                     <input>${basedir}/src/main/java</input>
-                    <outputDirectory>${basedir}/target/doc</outputDirectory>
+                    <outputDirectory>${basedir}/target/site/doc</outputDirectory>
                     <filePatterns>*.java</filePatterns>
                     <recursive>true</recursive>
                 </configuration>
@@ -100,7 +122,7 @@
                     <repositoryOwner>nilsmehlhorn</repositoryOwner>
 
                     <server>github</server>
-                    <outputDirectory>${basedir}/target/doc/doxygen</outputDirectory>
+                    <outputDirectory>${basedir}/target/site</outputDirectory>
 
                     <message>Building documentation site for crypto-editor (${project.version})</message>
                     <path>${site.path}</path>
