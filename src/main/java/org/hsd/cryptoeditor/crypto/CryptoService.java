@@ -105,17 +105,24 @@ public class CryptoService {
     }
 
     private Key getSecretKey(Encryption encryption, char[] password) {
-        if (encryption.getType().isAsymmetric()) {
-            throw new IllegalArgumentException("Can only generate key-pairs for asymmetric encryption types");
+        assert !encryption.getType().isAsymmetric() : encryption.getType();
+
+        SecretKey key = StoreService.getInstance().loadSecretKey(encryption.getType().getName(), password);
+        if (key == null) {
+            try {
+                key = KeyGenerator.getInstance(encryption.getType().getName(), "BC").generateKey();
+                StoreService.getInstance().storeSecretKey(encryption.getType().getName(), key, password);
+            } catch (Exception e) {
+                throw new CryptoEditorException(
+                        String.format("Could not generate secret-key for algorithm %s", encryption.getType().getName()), e);
+            }
         }
-        Key key = StoreService.getInstance().loadSecretKey(encryption.getType().getName(), password);
-        return key != null ? key : generateKey(encryption.getType().getName(), password);
+        return key;
     }
 
     private KeyPair getKeyPair(Encryption encryption, char[] password) {
-        if (!encryption.getType().isAsymmetric()) {
-            throw new IllegalArgumentException("Can only generate key-pairs for asymmetric encryption types");
-        }
+        assert encryption.getType().isAsymmetric() : encryption.getType();
+
         byte[] publicKeyBytes = encryption.getPublicKey();
         KeyPair keyPair = null;
         if (publicKeyBytes != null) {
@@ -138,16 +145,16 @@ public class CryptoService {
                 // expose public key
                 encryption.setPublicKey(keyPair.getPublic().getEncoded());
             } catch (Exception e) {
-                throw new CryptoEditorException(String.format("Could not generate key-pair for %s", encryption.getType().getName()), e);
+                throw new CryptoEditorException(
+                        String.format("Could not generate key-pair for algorithm %s", encryption.getType().getName()), e);
             }
         }
         return keyPair;
     }
 
     private Key getPBEKey(Encryption encryption, char[] password) {
-        if (!encryption.getType().isPBEType()) {
-            throw new IllegalArgumentException("Can only generate PBE-keys for PBE encryption types");
-        }
+        assert encryption.getType().isPBEType() : encryption.getType();
+
         Key key = null;
         byte[] salt = encryption.getSalt();
         if (salt == null) {
@@ -161,22 +168,19 @@ public class CryptoService {
             SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(encryption.getType().getName(), "BC");
             key = keyFactory.generateSecret(pbeKeySpec);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new CryptoEditorException(
+                    String.format("Could not generate PBE-key for scheme %s", encryption.getType().getName()), e);
         }
         return key;
     }
 
-    private Key generateKey(String algorithm, char[] password) {
-        SecretKey key = null;
-        try {
-            key = KeyGenerator.getInstance(algorithm, "BC").generateKey();
-            StoreService.getInstance().storeSecretKey(algorithm, key, password);
-        } catch (Exception e) {
-            throw new CryptoEditorException(e);
-        }
-        return key;
-    }
-
+    /**
+     * Utility method to generate a random certificate for private-key storage in java keystore
+     *
+     * @param keyPair RSA keypair to generate certificate for
+     * @return self-signed utility certificate
+     * @see java.security.KeyStore.PrivateKeyEntry
+     */
     private X509Certificate generateCertificate(KeyPair keyPair) {
         X509V3CertificateGenerator cert = new X509V3CertificateGenerator();
         cert.setSerialNumber(BigInteger.valueOf(1));

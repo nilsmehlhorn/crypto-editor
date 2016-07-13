@@ -12,8 +12,9 @@ import java.security.KeyPair;
 
 /**
  * Cryptographer implementation based on the Bouncy Castle Provider.
- *
+ * <p>
  * Note that you have to pass keys and key-pairs which work with the Bouncy Castle Provider (preferably created using it).
+ *
  * @see org.bouncycastle.jce.provider.BouncyCastleProvider
  */
 public class BCCryptographer implements Cryptographer {
@@ -43,17 +44,22 @@ public class BCCryptographer implements Cryptographer {
     }
 
     private Cipher buildCipher(int cipherMode) {
+        assert cipherMode == Cipher.ENCRYPT_MODE || cipherMode == Cipher.DECRYPT_MODE : cipherMode;
+
         if (encryption == null) {
             throw new IllegalStateException("BCCryptographer needs to be initialized with a valid encryption");
         }
+
         try {
             return encryption.getType().isAsymmetric() ? buildAsymmetricCipher(cipherMode) : buildSymmetricCipher(cipherMode);
         } catch (Exception e) {
-            throw new CryptographerException(e);
+            throw new CryptographerException("Could not build cipher", e);
         }
     }
 
     private Cipher buildSymmetricCipher(int cipherMode) throws Exception {
+        assert cipherMode == Cipher.ENCRYPT_MODE || cipherMode == Cipher.DECRYPT_MODE : cipherMode;
+
         if (key == null) {
             throw new IllegalStateException("A valid secret-key is required for a symmetric encryption type");
         }
@@ -77,6 +83,8 @@ public class BCCryptographer implements Cryptographer {
     }
 
     private Cipher buildAsymmetricCipher(int cipherMode) throws Exception {
+        assert cipherMode == Cipher.ENCRYPT_MODE || cipherMode == Cipher.DECRYPT_MODE : cipherMode;
+
         if (keyPair == null) {
             throw new IllegalStateException("A valid key-pair is required for an asymmetric encryption type");
         }
@@ -90,6 +98,8 @@ public class BCCryptographer implements Cryptographer {
     }
 
     private String parseInstanceCall(Encryption encryption) {
+        assert encryption != null;
+
         String instanceCall = encryption.getType().getName();
         if (encryption.getType().isPBEType() || encryption.getType().isStreamType()) {
             return instanceCall;

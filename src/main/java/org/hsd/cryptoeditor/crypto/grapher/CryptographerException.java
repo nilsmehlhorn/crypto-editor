@@ -11,4 +11,8 @@ public class CryptographerException extends RuntimeException {
     public CryptographerException(String m) {
         super(m);
     }
+
+    public CryptographerException(String m, Throwable e) {
+        super(m, e);
+    }
 }
