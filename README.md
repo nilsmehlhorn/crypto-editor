@@ -50,5 +50,5 @@ At the moment only *RSA* encryption is supported
 
 You also have the possiblity to save files without encryption.
 ## Documentation
-[Latest Snapshot](http://nilsmehlhorn.github.io/crypto-editor/doc/snapshot)
+[Latest Snapshot](http://nilsmehlhorn.github.io/crypto-editor/doc/snapshot)<br>
 [Release 0.2](http://nilsmehlhorn.github.io/crypto-editor/doc/release/0.2)
