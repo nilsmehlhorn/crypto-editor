@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PersistenceDTO.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">crypto-editor</a> &gt; <a href="index.source.html" class="el_package">org.hsd.cryptoeditor.doc</a> &gt; <span class="el_source">PersistenceDTO.java</span></div><h1>PersistenceDTO.java</h1><pre class="source lang-java linenums">package org.hsd.cryptoeditor.doc;
+
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import org.hsd.cryptoeditor.crypto.encryption.EncryptionMode;
+import org.hsd.cryptoeditor.crypto.encryption.EncryptionPadding;
+import org.hsd.cryptoeditor.crypto.encryption.EncryptionType;
+
+/**
+ * Persistence class for serialization of documents.
+ */
+@JsonInclude(JsonInclude.Include.NON_NULL)
+<span class="nc" id="L13">public class PersistenceDTO {</span>
+
+    private EncryptionType encryptionType;
+
+    private EncryptionPadding encryptionPadding;
+
+    private EncryptionMode encryptionMode;
+
+    private byte[] initializationVector;
+
+    private byte[] publicKey;
+
+    private byte[] content;
+
+    private byte[] hash;
+
+    private byte[] salt;
+
+    ///
+
+    public byte[] getInitializationVector() {
+<span class="nc" id="L34">        return initializationVector;</span>
+    }
+
+    public void setInitializationVector(byte[] initializationVector) {
+<span class="nc" id="L38">        this.initializationVector = initializationVector;</span>
+<span class="nc" id="L39">    }</span>
+
+    public byte[] getPublicKey() {
+<span class="nc" id="L42">        return publicKey;</span>
+    }
+
+    public void setPublicKey(byte[] publicKey) {
+<span class="nc" id="L46">        this.publicKey = publicKey;</span>
+<span class="nc" id="L47">    }</span>
+
+    public byte[] getHash() {
+<span class="nc" id="L50">        return hash;</span>
+    }
+
+    public void setHash(byte[] hash) {
+<span class="nc" id="L54">        this.hash = hash;</span>
+<span class="nc" id="L55">    }</span>
+
+    public byte[] getContent() {
+<span class="nc" id="L58">        return content;</span>
+    }
+
+    public void setContent(byte[] content) {
+<span class="nc" id="L62">        this.content = content;</span>
+<span class="nc" id="L63">    }</span>
+
+    public EncryptionType getEncryptionType() {
+<span class="nc" id="L66">        return encryptionType;</span>
+    }
+
+    public void setEncryptionType(EncryptionType encryptionType) {
+<span class="nc" id="L70">        this.encryptionType = encryptionType;</span>
+<span class="nc" id="L71">    }</span>
+
+    public EncryptionPadding getEncryptionPadding() {
+<span class="nc" id="L74">        return encryptionPadding;</span>
+    }
+
+    public void setEncryptionPadding(EncryptionPadding encryptionPadding) {
+<span class="nc" id="L78">        this.encryptionPadding = encryptionPadding;</span>
+<span class="nc" id="L79">    }</span>
+
+    public EncryptionMode getEncryptionMode() {
+<span class="nc" id="L82">        return encryptionMode;</span>
+    }
+
+    public void setEncryptionMode(EncryptionMode encryptionMode) {
+<span class="nc" id="L86">        this.encryptionMode = encryptionMode;</span>
+<span class="nc" id="L87">    }</span>
+
+    public void setSalt(byte[] salt) {
+<span class="nc" id="L90">        this.salt = salt;</span>
+<span class="nc" id="L91">    }</span>
+
+    public byte[] getSalt() {
+<span class="nc" id="L94">        return salt;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

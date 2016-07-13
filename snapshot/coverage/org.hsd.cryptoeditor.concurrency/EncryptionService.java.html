@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>EncryptionService.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">crypto-editor</a> &gt; <a href="index.source.html" class="el_package">org.hsd.cryptoeditor.concurrency</a> &gt; <span class="el_source">EncryptionService.java</span></div><h1>EncryptionService.java</h1><pre class="source lang-java linenums">package org.hsd.cryptoeditor.concurrency;
+
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import org.apache.commons.io.IOUtils;
+import org.hsd.cryptoeditor.crypto.CryptoService;
+import org.hsd.cryptoeditor.crypto.encryption.Encryption;
+import org.hsd.cryptoeditor.crypto.encryption.EncryptionType;
+import org.hsd.cryptoeditor.crypto.grapher.Cryptographer;
+
+import java.io.InputStream;
+
+/**
+ * Created by nils on 6/20/16.
+ */
+<span class="nc" id="L16">public class EncryptionService extends Service&lt;byte[]&gt; {</span>
+
+    private InputStream contentInput;
+
+    private Encryption encryption;
+
+    private char[] password;
+
+    public void setEncryption(Encryption encryption) {
+<span class="nc" id="L25">        this.encryption = encryption;</span>
+<span class="nc" id="L26">    }</span>
+
+    public void setPassword(char[] password) {
+<span class="nc" id="L29">        this.password = password;</span>
+<span class="nc" id="L30">    }</span>
+
+    public void setContentInput(InputStream contentInput) {
+<span class="nc" id="L33">        this.contentInput = contentInput;</span>
+<span class="nc" id="L34">    }</span>
+
+    @Override
+    protected Task&lt;byte[]&gt; createTask() {
+<span class="nc" id="L38">        return new Task&lt;byte[]&gt;() {</span>
+            protected byte[] call() throws Exception {
+<span class="nc" id="L40">                InputStream source = contentInput;</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">                if (encryption.getType() != EncryptionType.NONE) {</span>
+<span class="nc" id="L42">                    Cryptographer c = CryptoService.getInstance().getCryptographer(encryption, password);</span>
+<span class="nc" id="L43">                    source = c.getEncryptor(contentInput);</span>
+                }
+<span class="nc" id="L45">                return IOUtils.toByteArray(source);</span>
+            }
+        };
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

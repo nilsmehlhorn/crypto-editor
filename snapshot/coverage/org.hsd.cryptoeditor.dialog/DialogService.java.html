@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DialogService.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">crypto-editor</a> &gt; <a href="index.source.html" class="el_package">org.hsd.cryptoeditor.dialog</a> &gt; <span class="el_source">DialogService.java</span></div><h1>DialogService.java</h1><pre class="source lang-java linenums">package org.hsd.cryptoeditor.dialog;
+
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
+import org.hsd.cryptoeditor.CryptoEditorException;
+import org.hsd.cryptoeditor.crypto.encryption.Encryption;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
+
+
+/**
+ * Service for handling dailog based interactions with the user.
+ */
+public class DialogService {
+
+    private Window window;
+
+    public void setWindow(Window window) {
+<span class="nc" id="L26">        this.window = window;</span>
+<span class="nc" id="L27">    }</span>
+
+    /**
+     * Displays a file chooser dialog for opening a file.
+     *
+     * @param title title of the dialog window
+     * @return user chosen file
+     */
+    public File showOpenDialog(String title) {
+<span class="nc" id="L36">        FileChooser fileChooser = new FileChooser();</span>
+<span class="nc" id="L37">        fileChooser.setTitle(title);</span>
+<span class="nc" id="L38">        return fileChooser.showOpenDialog(window);</span>
+    }
+
+    /**
+     * Displays a file chooser dialog for saving a file.
+     *
+     * @param title title of the dialog window
+     * @return user chosen file
+     */
+    public File showSaveDialog(String title) {
+<span class="nc" id="L48">        FileChooser fileChooser = new FileChooser();</span>
+<span class="nc" id="L49">        fileChooser.setInitialFileName(&quot;untitled.json&quot;);</span>
+<span class="nc" id="L50">        fileChooser.setTitle(title);</span>
+<span class="nc" id="L51">        return fileChooser.showSaveDialog(window);</span>
+    }
+
+    /**
+     * Displays an error dialog.
+     *
+     * @param header  title of the error message
+     * @param content text of the error message
+     */
+    public void showErrorDialog(String header, String content) {
+<span class="nc" id="L61">        Alert alert = new Alert(Alert.AlertType.ERROR);</span>
+<span class="nc" id="L62">        alert.setTitle(&quot;Error&quot;);</span>
+<span class="nc" id="L63">        alert.setHeaderText(header);</span>
+<span class="nc" id="L64">        Label label = new Label(content);</span>
+<span class="nc" id="L65">        label.setWrapText(true);</span>
+<span class="nc" id="L66">        alert.getDialogPane().setContent(label);</span>
+<span class="nc" id="L67">        alert.showAndWait();</span>
+<span class="nc" id="L68">    }</span>
+
+    /**
+     * Displays a dialog for encryption selection.
+     *
+     * @param currentEncryption currently selected encryption to initialize the dialog with
+     * @return optional resolving to the now selected encryption
+     */
+    public Optional&lt;Encryption&gt; showEncryptionDialog(Encryption currentEncryption) {
+<span class="nc" id="L77">        Dialog&lt;Encryption&gt; encryptionDialog = new Dialog&lt;&gt;();</span>
+        try {
+<span class="nc" id="L79">            FXMLLoader loader = new FXMLLoader(getClass().getResource(&quot;/dialog/encryption_dialog.fxml&quot;));</span>
+<span class="nc" id="L80">            encryptionDialog.setTitle(&quot;Encryption&quot;);</span>
+<span class="nc" id="L81">            encryptionDialog.getDialogPane().setContent(loader.load());</span>
+<span class="nc" id="L82">            encryptionDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);</span>
+<span class="nc" id="L83">            EncryptionDialogController controller = loader.getController();</span>
+<span class="nc" id="L84">            controller.setEncryption(currentEncryption);</span>
+<span class="nc" id="L85">            encryptionDialog.setResultConverter(buttonType -&gt; {</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">                ButtonBar.ButtonData data = buttonType == null ? null : buttonType.getButtonData();</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">                return data == ButtonBar.ButtonData.OK_DONE ? controller.getEncryption() : null;</span>
+            });
+<span class="nc" id="L89">            return encryptionDialog.showAndWait();</span>
+<span class="nc" id="L90">        } catch (IOException e) {</span>
+<span class="nc" id="L91">            throw new CryptoEditorException(&quot;Unable to load view-resource&quot;, e);</span>
+        }
+    }
+
+    /**
+     * Displays a password input dialog.
+     *
+     * @return optional resolving to the entered password
+     */
+    public Optional&lt;String&gt; showPasswordDialog() {
+<span class="nc" id="L101">        Dialog&lt;String&gt; passwordDialog = new Dialog&lt;&gt;();</span>
+        try {
+<span class="nc" id="L103">            FXMLLoader loader = new FXMLLoader(getClass().getResource(&quot;/dialog/password_dialog.fxml&quot;));</span>
+<span class="nc" id="L104">            passwordDialog.setTitle(&quot;Password&quot;);</span>
+<span class="nc" id="L105">            passwordDialog.getDialogPane().setContent(loader.load());</span>
+<span class="nc" id="L106">            passwordDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);</span>
+<span class="nc" id="L107">            PasswordDialogController controller = loader.getController();</span>
+<span class="nc" id="L108">            passwordDialog.setResultConverter(buttonType -&gt; {</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">                ButtonBar.ButtonData data = buttonType == null ? null : buttonType.getButtonData();</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">                return data == ButtonBar.ButtonData.OK_DONE ? controller.getPassword() : null;</span>
+            });
+<span class="nc" id="L112">            return passwordDialog.showAndWait();</span>
+<span class="nc" id="L113">        } catch (IOException e) {</span>
+<span class="nc" id="L114">            throw new CryptoEditorException(&quot;Unable to load view-resource&quot;, e);</span>
+        }
+    }
+
+    /////
+
+<span class="nc" id="L120">    private static final DialogService instance = new DialogService();</span>
+
+<span class="nc" id="L122">    private DialogService() {</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        if (instance != null) {</span>
+<span class="nc" id="L124">            throw new IllegalStateException(&quot;Already instantiated&quot;);</span>
+        }
+<span class="nc" id="L126">    }</span>
+
+    public static DialogService getInstance() {
+<span class="nc" id="L129">        return instance;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>EncryptionDialogController.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">crypto-editor</a> &gt; <a href="index.source.html" class="el_package">org.hsd.cryptoeditor.dialog</a> &gt; <span class="el_source">EncryptionDialogController.java</span></div><h1>EncryptionDialogController.java</h1><pre class="source lang-java linenums">package org.hsd.cryptoeditor.dialog;
+
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import org.hsd.cryptoeditor.crypto.CryptoService;
+import org.hsd.cryptoeditor.crypto.encryption.Encryption;
+import org.hsd.cryptoeditor.crypto.encryption.EncryptionMode;
+import org.hsd.cryptoeditor.crypto.encryption.EncryptionPadding;
+import org.hsd.cryptoeditor.crypto.encryption.EncryptionType;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+/**
+ * Controller for handing the encryption selection dialog.
+ */
+<span class="nc" id="L24">public class EncryptionDialogController {</span>
+    @FXML
+    private ComboBox&lt;EncryptionType&gt; asymmetricDropdown;
+    @FXML
+    private Tab symmetricTab;
+    @FXML
+    private Tab pbeTab;
+    @FXML
+    private Tab asymmetricTab;
+    @FXML
+    private ComboBox&lt;EncryptionType&gt; pbeDropdown;
+    @FXML
+    private TabPane tabPane;
+    @FXML
+    private ListView&lt;EncryptionType&gt; symmetricTypeList;
+    @FXML
+    private ComboBox&lt;EncryptionMode&gt; blockModeDropdown;
+    @FXML
+    private ComboBox&lt;EncryptionPadding&gt; paddingDropdown;
+
+<span class="nc" id="L44">    private Map&lt;EncryptionType, Encryption&gt; mapping = new HashMap&lt;&gt;();</span>
+
+    private Encryption selected;
+
+    /**
+     * Called by the FXML-Loader after the view is assembled. Will initialize the selectable modes and options and register listeners for selecting them.
+     */
+    @FXML
+    public void initialize() {
+<span class="nc" id="L53">        initSelectables();</span>
+<span class="nc" id="L54">        initListeners();</span>
+<span class="nc" id="L55">    }</span>
+
+    private void initListeners() {
+<span class="nc" id="L58">        symmetricTypeList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -&gt; {</span>
+<span class="nc" id="L59">            switchToType(newValue);</span>
+<span class="nc" id="L60">        });</span>
+<span class="nc" id="L61">        blockModeDropdown.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -&gt; {</span>
+<span class="nc" id="L62">            switchToMode(newValue);</span>
+<span class="nc" id="L63">        });</span>
+<span class="nc" id="L64">        paddingDropdown.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -&gt; {</span>
+<span class="nc" id="L65">            selected.setPadding(newValue);</span>
+<span class="nc" id="L66">        });</span>
+<span class="nc" id="L67">        pbeDropdown.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -&gt; {</span>
+<span class="nc" id="L68">            selected = mapping.get(newValue);</span>
+<span class="nc" id="L69">        });</span>
+<span class="nc" id="L70">        asymmetricDropdown.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -&gt; {</span>
+<span class="nc" id="L71">            selected = mapping.get(newValue);</span>
+<span class="nc" id="L72">        });</span>
+<span class="nc" id="L73">    }</span>
+
+    private void initSelectables() {
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        for (EncryptionType type : EncryptionType.values()) {</span>
+<span class="nc" id="L77">            mapping.put(type, CryptoService.getInstance().getEncryption(type));</span>
+        }
+<span class="nc" id="L79">        List&lt;EncryptionType&gt; pbeTypes = Arrays.stream(EncryptionType.values())</span>
+<span class="nc" id="L80">                .filter(EncryptionType::isPBEType)</span>
+<span class="nc" id="L81">                .collect(Collectors.toList());</span>
+<span class="nc" id="L82">        List&lt;EncryptionType&gt; asymmetricTypes = Arrays.stream(EncryptionType.values())</span>
+<span class="nc" id="L83">                .filter(EncryptionType::isAsymmetric)</span>
+<span class="nc" id="L84">                .collect(Collectors.toList());</span>
+<span class="nc" id="L85">        List&lt;EncryptionType&gt; symmetricTypes = Arrays.stream(EncryptionType.values())</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">                .filter(type -&gt; !pbeTypes.contains(type))</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">                .filter(type -&gt; !asymmetricTypes.contains(type))</span>
+<span class="nc" id="L88">                .collect(Collectors.toList());</span>
+<span class="nc" id="L89">        symmetricTypeList.setItems(FXCollections.observableList(symmetricTypes));</span>
+<span class="nc" id="L90">        pbeDropdown.setItems(FXCollections.observableArrayList(pbeTypes));</span>
+<span class="nc" id="L91">        asymmetricDropdown.setItems(FXCollections.observableArrayList(asymmetricTypes));</span>
+<span class="nc" id="L92">    }</span>
+
+    /**
+     * @return the encryption selected by the user
+     */
+    public Encryption getEncryption() {
+<span class="nc" id="L98">        return this.selected;</span>
+    }
+
+    /**
+     * Initializes the dialog with an encryption (used for displaying the currently selected encryption)
+     *
+     * @param encryption encryption to be display by the dialog
+     */
+    public void setEncryption(Encryption encryption) {
+<span class="nc" id="L107">        mapping.put(encryption.getType(), encryption);</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        if (encryption.getType().isPBEType()) {</span>
+<span class="nc" id="L109">            tabPane.getSelectionModel().select(pbeTab);</span>
+<span class="nc" id="L110">            pbeDropdown.getSelectionModel().select(encryption.getType());</span>
+        } else {
+<span class="nc" id="L112">            tabPane.getSelectionModel().select(symmetricTab);</span>
+<span class="nc" id="L113">            symmetricTypeList.getSelectionModel().select(encryption.getType());</span>
+        }
+<span class="nc" id="L115">    }</span>
+
+    private void switchToMode(EncryptionMode mode) {
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        if(mode == null) return;</span>
+<span class="nc" id="L119">        selected.setMode(mode);</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">        if (mode.isStreamMode()) {</span>
+<span class="nc" id="L121">            paddingDropdown.setDisable(true);</span>
+        } else {
+<span class="nc" id="L123">            paddingDropdown.setDisable(false);</span>
+<span class="nc" id="L124">            paddingDropdown.setItems(FXCollections.observableList(selected.getPossiblePaddings()));</span>
+        }
+<span class="nc" id="L126">    }</span>
+
+    private void switchToType(EncryptionType type) {
+<span class="nc" id="L129">        selected = mapping.get(type);</span>
+<span class="nc bnc" id="L130" title="All 4 branches missed.">        if (type.isStreamType() || type.equals(EncryptionType.NONE)) {</span>
+<span class="nc" id="L131">            blockModeDropdown.setDisable(true);</span>
+<span class="nc" id="L132">            paddingDropdown.setDisable(true);</span>
+        } else {
+<span class="nc" id="L134">            blockModeDropdown.setDisable(false);</span>
+<span class="nc" id="L135">            paddingDropdown.setDisable(false);</span>
+            // update possible modes&amp;paddings
+<span class="nc" id="L137">            blockModeDropdown.setItems(FXCollections.observableArrayList(selected.getType().getSupportedModes()));</span>
+<span class="nc" id="L138">            blockModeDropdown.getSelectionModel().select(selected.getMode());</span>
+<span class="nc" id="L139">            paddingDropdown.setItems(FXCollections.observableList(selected.getPossiblePaddings()));</span>
+<span class="nc" id="L140">            paddingDropdown.getSelectionModel().select(selected.getPadding());</span>
+        }
+<span class="nc" id="L142">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DocumentService.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">crypto-editor</a> &gt; <a href="index.source.html" class="el_package">org.hsd.cryptoeditor.doc</a> &gt; <span class="el_source">DocumentService.java</span></div><h1>DocumentService.java</h1><pre class="source lang-java linenums">package org.hsd.cryptoeditor.doc;
+
+import javafx.beans.property.*;
+import org.hsd.cryptoeditor.CryptoEditorException;
+import org.hsd.cryptoeditor.concurrency.DecryptionService;
+import org.hsd.cryptoeditor.concurrency.EncryptionService;
+import org.hsd.cryptoeditor.concurrency.LoadService;
+import org.hsd.cryptoeditor.concurrency.SaveService;
+import org.hsd.cryptoeditor.crypto.CryptoService;
+import org.hsd.cryptoeditor.crypto.encryption.Encryption;
+import org.hsd.cryptoeditor.dialog.DialogService;
+
+import java.io.*;
+import java.util.Optional;
+
+/**
+ * Service handling main features which consist of document related operations.
+ */
+public class DocumentService {
+
+<span class="nc" id="L21">    private ObjectProperty&lt;Document&gt; current = new SimpleObjectProperty&lt;Document&gt;();</span>
+
+<span class="nc" id="L23">    private DialogService dialogService = DialogService.getInstance();</span>
+
+<span class="nc" id="L25">    private CryptoService cryptoService = CryptoService.getInstance();</span>
+
+    /**
+     * Persists a document to the passed file by serializing the contents and encrypting them based on the nested encryption definition.
+     * This process uses {@link SaveService} and {@link EncryptionService} to perform expensive operations on seperate threads.
+     *
+     * @param file document file to save to
+     * @throws CryptoEditorException when an error occurs during the saving
+     */
+    public void saveCurrent(final File file) {
+<span class="nc" id="L35">        save(current.get(), file);</span>
+<span class="nc" id="L36">        current.get().setHasUnsavedChanges(false);</span>
+<span class="nc" id="L37">    }</span>
+
+    /**
+     * Assembles a document from the passed file by reading the contents and decrypting them based on the wrapped encryption definition.
+     * This process uses {@link LoadService} and {@link DecryptionService} to perform expensive operations on seperate threads.
+     * Eventually the document is set as currently in editing for the application.
+     *
+     * @param file document file to load from
+     * @throws CryptoEditorException when an error occurs during the loading
+     */
+    public void load(File file) {
+<span class="nc" id="L48">        final Document document = new Document();</span>
+<span class="nc" id="L49">        document.setFile(file);</span>
+<span class="nc" id="L50">        final LoadService loadService = new LoadService();</span>
+<span class="nc" id="L51">        loadService.setUrl(file.getPath());</span>
+<span class="nc" id="L52">        loadService.setOnSucceeded(event -&gt; {</span>
+<span class="nc" id="L53">            current.set(buildDocument(loadService.getValue(), file));</span>
+<span class="nc" id="L54">        });</span>
+<span class="nc" id="L55">        loadService.setOnFailed(f -&gt; {</span>
+<span class="nc" id="L56">            DialogService.getInstance().showErrorDialog(&quot;Could not load file&quot;, &quot;An error occured while loading the file&quot;);</span>
+<span class="nc" id="L57">            throw new CryptoEditorException(loadService.getException());</span>
+        });
+<span class="nc" id="L59">        loadService.start();</span>
+<span class="nc" id="L60">    }</span>
+
+    private void save(Document document, File file) {
+        // map to dto
+<span class="nc" id="L64">        PersistenceDTO dto = new PersistenceDTO();</span>
+<span class="nc" id="L65">        dto.setEncryptionType(document.getEncryption().getType());</span>
+<span class="nc" id="L66">        dto.setEncryptionMode(document.getEncryption().getMode());</span>
+<span class="nc" id="L67">        dto.setEncryptionPadding(document.getEncryption().getPadding());</span>
+        // encrypt content
+<span class="nc" id="L69">        EncryptionService encryptionService = new EncryptionService();</span>
+<span class="nc" id="L70">        encryptionService.setEncryption(document.getEncryption());</span>
+<span class="nc" id="L71">        encryptionService.setContentInput(new ByteArrayInputStream(document.getContentBytes()));</span>
+<span class="nc" id="L72">        encryptionService.setOnSucceeded(encryptionEvent -&gt; {</span>
+            // set content
+<span class="nc" id="L74">            dto.setContent(encryptionService.getValue());</span>
+            // set hash
+<span class="nc" id="L76">            dto.setHash(cryptoService.getHash(document.getContentBytes()));</span>
+            // set iv
+<span class="nc bnc" id="L78" title="All 2 branches missed.">            if (document.getEncryption().getMode() != null) {</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">                if (document.getEncryption().getMode().isVectorMode()) {</span>
+<span class="nc" id="L80">                    dto.setInitializationVector(document.getEncryption().getInitializationVector());</span>
+                }
+            }
+<span class="nc bnc" id="L83" title="All 2 branches missed.">            if (document.getEncryption().getType().isPBEType()) {</span>
+                // set salt
+<span class="nc" id="L85">                dto.setSalt(document.getEncryption().getSalt());</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">            } else if (document.getEncryption().getType().isAsymmetric()) {</span>
+                // set public key
+<span class="nc" id="L88">                dto.setPublicKey(document.getEncryption().getPublicKey());</span>
+            }
+            // save to file
+<span class="nc" id="L91">            SaveService saveService = new SaveService();</span>
+<span class="nc" id="L92">            saveService.setUrl(file.getPath());</span>
+<span class="nc" id="L93">            saveService.setPersistenceDTO(dto);</span>
+<span class="nc" id="L94">            saveService.setOnSucceeded(saveEvent -&gt; document.setFile(file));</span>
+<span class="nc" id="L95">            saveService.setOnFailed(failEvent -&gt; {</span>
+<span class="nc" id="L96">                dialogService.showErrorDialog(&quot;Could not save file&quot;, &quot;An error occured while saving the file&quot;);</span>
+<span class="nc" id="L97">                throw new CryptoEditorException(saveService.getException());</span>
+            });
+<span class="nc" id="L99">            saveService.start();</span>
+<span class="nc" id="L100">        });</span>
+<span class="nc" id="L101">        encryptionService.setOnFailed(failEvent -&gt; {</span>
+<span class="nc" id="L102">            dialogService.showErrorDialog(&quot;Could not encrypt contents&quot;, &quot;An error occured during encryption&quot;);</span>
+<span class="nc" id="L103">            throw new CryptoEditorException(encryptionService.getException());</span>
+        });
+<span class="nc" id="L105">        Optional&lt;String&gt; optional = dialogService.showPasswordDialog();</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        if (optional.isPresent()) {</span>
+<span class="nc" id="L107">            encryptionService.setPassword(optional.get().toCharArray());</span>
+<span class="nc" id="L108">            encryptionService.start();</span>
+        }
+<span class="nc" id="L110">    }</span>
+
+    private Document buildDocument(PersistenceDTO dto, File file) {
+<span class="nc" id="L113">        Document document = new Document();</span>
+<span class="nc" id="L114">        Encryption encryption = cryptoService.getEncryption(dto.getEncryptionType());</span>
+<span class="nc" id="L115">        encryption.setMode(dto.getEncryptionMode());</span>
+<span class="nc" id="L116">        encryption.setPadding(dto.getEncryptionPadding());</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">        if (encryption.getMode() != null) {</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">            if (encryption.getMode().isVectorMode()) {</span>
+<span class="nc" id="L119">                encryption.setInitializationVector(dto.getInitializationVector());</span>
+            }
+        }
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        if (encryption.getType().isPBEType()) {</span>
+<span class="nc" id="L123">            encryption.setSalt(dto.getSalt());</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        } else if (encryption.getType().isAsymmetric()) {</span>
+<span class="nc" id="L125">            encryption.setPublicKey(dto.getPublicKey());</span>
+        }
+<span class="nc" id="L127">        document.setEncryption(encryption);</span>
+<span class="nc" id="L128">        document.setFile(file);</span>
+<span class="nc" id="L129">        DecryptionService decryptionService = new DecryptionService();</span>
+<span class="nc" id="L130">        decryptionService.setCipherInput(new ByteArrayInputStream(dto.getContent()));</span>
+<span class="nc" id="L131">        decryptionService.setEncryption(document.getEncryption());</span>
+<span class="nc" id="L132">        decryptionService.setOnSucceeded(event -&gt; {</span>
+<span class="nc" id="L133">            byte[] decryptionResult = decryptionService.getValue();</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">            if (!cryptoService.hashMatch(decryptionResult, dto.getHash())) {</span>
+<span class="nc" id="L135">                dialogService.showErrorDialog(&quot;The decrypted content did not pass the hash test&quot;,</span>
+                        &quot;The persisted hash did not match the hash value of the decrypted contents.\n&quot; +
+                                &quot;The content might be tampered!&quot;);
+            }
+<span class="nc" id="L139">            document.setText(new String(decryptionResult));</span>
+<span class="nc" id="L140">        });</span>
+<span class="nc" id="L141">        decryptionService.setOnFailed(failEvent -&gt; {</span>
+<span class="nc" id="L142">            dialogService.showErrorDialog(&quot;Could not decrypt contents&quot;, &quot;An error occured during decryption&quot;);</span>
+<span class="nc" id="L143">            throw new CryptoEditorException(decryptionService.getException());</span>
+        });
+<span class="nc" id="L145">        Optional&lt;String&gt; optional = dialogService.showPasswordDialog();</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        if (optional.isPresent()) {</span>
+<span class="nc" id="L147">            decryptionService.setPassword(optional.get().toCharArray());</span>
+<span class="nc" id="L148">            decryptionService.start();</span>
+        }
+<span class="nc" id="L150">        return document;</span>
+    }
+
+    /**
+     * Initializes the document currently in editing with a new document. If there are unsaved changes to the document the user will be prompted to a save-dialog.
+     */
+    public void initNewDocument() {
+        // TODO check for unsaved
+<span class="nc" id="L158">        current.set(new Document());</span>
+<span class="nc" id="L159">    }</span>
+
+    /**
+     * @return property containting the document currently in editing
+     */
+    public ObjectProperty&lt;Document&gt; currentDocumentProperty() {
+<span class="nc" id="L165">        return current;</span>
+    }
+
+    /////
+
+<span class="nc" id="L170">    private static final DocumentService instance = new DocumentService();</span>
+
+<span class="nc" id="L172">    private DocumentService() {</span>
+<span class="nc bnc" id="L173" title="All 2 branches missed.">        if (instance != null) {</span>
+<span class="nc" id="L174">            throw new IllegalStateException(&quot;Already instantiated&quot;);</span>
+        } else {
+<span class="nc" id="L176">            initNewDocument();</span>
+        }
+<span class="nc" id="L178">    }</span>
+
+    /**
+     * When the service is instantiated a new document will be initialized as the document currently in editing.
+     *
+     * @return service instance
+     */
+    public static DocumentService getInstance() {
+<span class="nc" id="L186">        return instance;</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

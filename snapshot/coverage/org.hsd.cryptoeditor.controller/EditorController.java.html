@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>EditorController.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">crypto-editor</a> &gt; <a href="index.source.html" class="el_package">org.hsd.cryptoeditor.controller</a> &gt; <span class="el_source">EditorController.java</span></div><h1>EditorController.java</h1><pre class="source lang-java linenums">package org.hsd.cryptoeditor.controller;
+
+import javafx.beans.property.ObjectProperty;
+import javafx.fxml.FXML;
+import javafx.scene.control.TextArea;
+import org.hsd.cryptoeditor.doc.Document;
+import org.hsd.cryptoeditor.doc.DocumentService;
+
+
+/**
+ * Controller for handling the editor text-input.
+ */
+<span class="nc" id="L13">public class EditorController {</span>
+
+    @FXML
+    private TextArea editorField;
+
+    private ObjectProperty&lt;Document&gt; documentProperty;
+
+
+    /**
+     * Called by the FXML-Loader after the view is assembled.
+     * Will bind the text-field to the document-property exposed by the document-service.
+     *
+     * @see DocumentService#currentDocumentProperty()
+     */
+    @FXML
+    public void initialize() {
+<span class="nc" id="L29">        DocumentService documentService = DocumentService.getInstance();</span>
+<span class="nc" id="L30">        documentProperty = documentService.currentDocumentProperty();</span>
+<span class="nc" id="L31">        editorField.textProperty().bindBidirectional(documentProperty.getValue().textProperty());</span>
+<span class="nc" id="L32">        documentProperty.addListener((observable, oldValue, newValue) -&gt; {</span>
+<span class="nc" id="L33">            editorField.textProperty().bindBidirectional(newValue.textProperty());</span>
+<span class="nc" id="L34">        });</span>
+<span class="nc" id="L35">        editorField.setOnKeyPressed(event -&gt; documentProperty.get().setHasUnsavedChanges(true));</span>
+<span class="nc" id="L36">    }</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

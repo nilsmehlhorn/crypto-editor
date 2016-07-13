@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TopController.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">crypto-editor</a> &gt; <a href="index.source.html" class="el_package">org.hsd.cryptoeditor.controller</a> &gt; <span class="el_source">TopController.java</span></div><h1>TopController.java</h1><pre class="source lang-java linenums">package org.hsd.cryptoeditor.controller;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import org.hsd.cryptoeditor.crypto.encryption.Encryption;
+import org.hsd.cryptoeditor.doc.Document;
+import org.hsd.cryptoeditor.dialog.DialogService;
+import org.hsd.cryptoeditor.doc.DocumentService;
+
+import java.util.Optional;
+
+/**
+ * Controller for handling the toolbar of the application.
+ */
+<span class="nc" id="L15">public class TopController {</span>
+
+    private DocumentService documentService;
+
+    @FXML
+    public void initialize() {
+<span class="nc" id="L21">        documentService = DocumentService.getInstance();</span>
+<span class="nc" id="L22">    }</span>
+
+    /**
+     * Action method for initializing the editor with a new document.
+     *
+     * @param actionEvent event
+     */
+    public void fileNew(ActionEvent actionEvent) {
+<span class="nc" id="L30">        documentService.initNewDocument();</span>
+<span class="nc" id="L31">    }</span>
+
+    /**
+     * Action method for saving the document currently in editing.
+     * If the document has already been saved at some point it will be fast-saved to the same file.
+     *
+     * @param actionEvent event
+     */
+    public void save(ActionEvent actionEvent) {
+<span class="nc" id="L40">        Document doc = documentService.currentDocumentProperty().get();</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        if (doc.getFile() == null) {</span>
+<span class="nc" id="L42">            documentService.saveCurrent(DialogService.getInstance().showSaveDialog(&quot;Save&quot;));</span>
+        } else {
+<span class="nc" id="L44">            documentService.saveCurrent(doc.getFile());</span>
+        }
+<span class="nc" id="L46">    }</span>
+
+    /**
+     * Action method for explicitly saving a document to a user chosen file.
+     *
+     * @param actionEvent event
+     */
+    public void saveAs(ActionEvent actionEvent) {
+<span class="nc" id="L54">        documentService.saveCurrent(DialogService.getInstance().showSaveDialog(&quot;Save as&quot;));</span>
+<span class="nc" id="L55">    }</span>
+
+    /**
+     * Action method for opening a document-file for editing.
+     *
+     * @param actionEvent event
+     */
+    public void open(ActionEvent actionEvent) {
+<span class="nc" id="L63">        documentService.load(DialogService.getInstance().showOpenDialog(&quot;Open&quot;));</span>
+<span class="nc" id="L64">    }</span>
+
+    /**
+     * Action method for opening a dialog for encryption selection.
+     *
+     * @param actionEvent event
+     */
+    public void encryption(ActionEvent actionEvent) {
+<span class="nc" id="L72">        Optional&lt;Encryption&gt; optional = DialogService.getInstance()</span>
+<span class="nc" id="L73">                .showEncryptionDialog(documentService.currentDocumentProperty().get().getEncryption());</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (optional.isPresent()) {</span>
+<span class="nc" id="L75">            documentService.currentDocumentProperty().get().setEncryption(optional.get());</span>
+        }
+
+<span class="nc" id="L78">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>
