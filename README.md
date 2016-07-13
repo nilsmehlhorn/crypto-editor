@@ -49,6 +49,9 @@ At the moment only *RSA* encryption is supported
 ---
 
 You also have the possiblity to save files without encryption.
-## Documentation
-[Latest Snapshot](http://nilsmehlhorn.github.io/crypto-editor/doc/snapshot)<br>
-[Release 0.2](http://nilsmehlhorn.github.io/crypto-editor/doc/release/0.2)
+## Releases
+
+| Latest Snapshot | Release 0.2 | 
+| ---             | ---         |
+|[Documentation](http://nilsmehlhorn.github.io/crypto-editor/snapshot/doc/doxygen)|[Documentation](http://nilsmehlhorn.github.io/crypto-editor/doc/release/0.2)|
+|[Coverage](http://nilsmehlhorn.github.io/crypto-editor/snapshot/coverage/)| - |
