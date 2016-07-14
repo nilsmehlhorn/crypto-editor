@@ -14,7 +14,7 @@
 
     <groupId>org.hsd</groupId>
     <artifactId>crypto-editor</artifactId>
-    <version>0.2</version>
+    <version>0.2.2</version>
     <url>https://github.com/nilsmehlhorn/crypto-editor</url>
 
 
@@ -61,6 +61,32 @@
                 <configuration>
                     <mainClass>${app.mainclass}</mainClass>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>create-jfxjar</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>build-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <descriptor>src/assembly.xml</descriptor>
+                    <outputDirectory>${project.basedir}/target/site/build</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>create-archive</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -193,6 +219,12 @@
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
             <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.saxsys</groupId>
+            <artifactId>jfx-testrunner</artifactId>
+            <version>1.0</version>
             <scope>test</scope>
         </dependency>
 
