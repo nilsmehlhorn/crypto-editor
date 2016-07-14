@@ -1,11 +1,11 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 crypto-editor,org.hsd.cryptoeditor.crypto,StoreService,188,0,8,0,40,0,12,0,8,0
-crypto-editor,org.hsd.cryptoeditor.crypto,CryptoService,343,0,20,0,90,0,22,0,12,0
+crypto-editor,org.hsd.cryptoeditor.crypto,CryptoService,375,0,28,0,90,0,25,0,11,0
 crypto-editor,org.hsd.cryptoeditor.controller,TopController,69,0,4,0,19,0,9,0,7,0
 crypto-editor,org.hsd.cryptoeditor.controller,EditorController,43,0,0,0,9,0,4,0,4,0
 crypto-editor,org.hsd.cryptoeditor.controller,MainController,22,0,0,0,4,0,2,0,2,0
-crypto-editor,org.hsd.cryptoeditor.crypto.grapher,BCCryptographer,30,185,7,17,7,35,7,15,0,10
-crypto-editor,org.hsd.cryptoeditor.crypto.grapher,CryptographerException,8,0,0,0,4,0,2,0,2,0
+crypto-editor,org.hsd.cryptoeditor.crypto.grapher,BCCryptographer,71,200,26,22,7,40,19,16,0,11
+crypto-editor,org.hsd.cryptoeditor.crypto.grapher,CryptographerException,13,0,0,0,6,0,3,0,3,0
 crypto-editor,org.hsd.cryptoeditor.dialog,PasswordDialogController,7,0,0,0,2,0,2,0,2,0
 crypto-editor,org.hsd.cryptoeditor.dialog,EncryptionDialogController,290,0,16,0,63,0,23,0,15,0
 crypto-editor,org.hsd.cryptoeditor.dialog,DialogService,216,0,10,0,48,0,16,0,11,0
@@ -25,4 +25,4 @@ crypto-editor,org.hsd.cryptoeditor.concurrency,SaveService,22,0,0,0,7,0,4,0,4,0
 crypto-editor,org.hsd.cryptoeditor.crypto.encryption,EncryptionMode,5,141,0,0,0,17,1,7,1,7
 crypto-editor,org.hsd.cryptoeditor.crypto.encryption,EncryptionType,9,238,0,4,0,28,2,10,2,8
 crypto-editor,org.hsd.cryptoeditor.crypto.encryption,EncryptionPadding,8,49,0,0,1,7,2,3,2,3
-crypto-editor,org.hsd.cryptoeditor.crypto.encryption,Encryption,25,84,5,7,9,23,9,10,4,9
+crypto-editor,org.hsd.cryptoeditor.crypto.encryption,Encryption,25,77,5,7,9,22,9,10,4,9

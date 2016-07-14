@@ -23,7 +23,7 @@ import java.util.Calendar;
 /**
  * Service handling all cryptography-related operations
  */
-public class CryptoService {
+<span class="nc bnc" id="L26" title="All 2 branches missed.">public class CryptoService {</span>
 
     private static final int ITERATIONS = 1024;
     private static final int SEED_BYTES = 32;
@@ -105,111 +105,115 @@ public class CryptoService {
     }
 
     private Key getSecretKey(Encryption encryption, char[] password) {
-<span class="nc bnc" id="L108" title="All 2 branches missed.">        if (encryption.getType().isAsymmetric()) {</span>
-<span class="nc" id="L109">            throw new IllegalArgumentException(&quot;Can only generate key-pairs for asymmetric encryption types&quot;);</span>
+<span class="nc bnc" id="L108" title="All 4 branches missed.">        assert !encryption.getType().isAsymmetric() : encryption.getType();</span>
+
+<span class="nc" id="L110">        SecretKey key = StoreService.getInstance().loadSecretKey(encryption.getType().getName(), password);</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">        if (key == null) {</span>
+            try {
+<span class="nc" id="L113">                key = KeyGenerator.getInstance(encryption.getType().getName(), &quot;BC&quot;).generateKey();</span>
+<span class="nc" id="L114">                StoreService.getInstance().storeSecretKey(encryption.getType().getName(), key, password);</span>
+<span class="nc" id="L115">            } catch (Exception e) {</span>
+<span class="nc" id="L116">                throw new CryptoEditorException(</span>
+<span class="nc" id="L117">                        String.format(&quot;Could not generate secret-key for algorithm %s&quot;, encryption.getType().getName()), e);</span>
+<span class="nc" id="L118">            }</span>
         }
-<span class="nc" id="L111">        Key key = StoreService.getInstance().loadSecretKey(encryption.getType().getName(), password);</span>
-<span class="nc bnc" id="L112" title="All 2 branches missed.">        return key != null ? key : generateKey(encryption.getType().getName(), password);</span>
+<span class="nc" id="L120">        return key;</span>
     }
 
     private KeyPair getKeyPair(Encryption encryption, char[] password) {
-<span class="nc bnc" id="L116" title="All 2 branches missed.">        if (!encryption.getType().isAsymmetric()) {</span>
-<span class="nc" id="L117">            throw new IllegalArgumentException(&quot;Can only generate key-pairs for asymmetric encryption types&quot;);</span>
-        }
-<span class="nc" id="L119">        byte[] publicKeyBytes = encryption.getPublicKey();</span>
-<span class="nc" id="L120">        KeyPair keyPair = null;</span>
-<span class="nc bnc" id="L121" title="All 2 branches missed.">        if (publicKeyBytes != null) {</span>
+<span class="nc bnc" id="L124" title="All 4 branches missed.">        assert encryption.getType().isAsymmetric() : encryption.getType();</span>
+
+<span class="nc" id="L126">        byte[] publicKeyBytes = encryption.getPublicKey();</span>
+<span class="nc" id="L127">        KeyPair keyPair = null;</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">        if (publicKeyBytes != null) {</span>
             // get private key
-<span class="nc" id="L123">            PrivateKey privateKey = StoreService.getInstance().loadPrivateKey(encryption.getType().getName(), password);</span>
+<span class="nc" id="L130">            PrivateKey privateKey = StoreService.getInstance().loadPrivateKey(encryption.getType().getName(), password);</span>
             try {
-<span class="nc" id="L125">                PublicKey publicKey = KeyFactory.getInstance(encryption.getType().getName(), &quot;BC&quot;)</span>
-<span class="nc" id="L126">                        .generatePublic(new X509EncodedKeySpec(publicKeyBytes));</span>
-<span class="nc" id="L127">                keyPair = new KeyPair(publicKey, privateKey);</span>
-<span class="nc" id="L128">            } catch (Exception e) {</span>
-<span class="nc" id="L129">                throw new CryptoEditorException(&quot;Could not recover public key from serialization&quot;, e);</span>
-<span class="nc" id="L130">            }</span>
-<span class="nc" id="L131">        } else {</span>
+<span class="nc" id="L132">                PublicKey publicKey = KeyFactory.getInstance(encryption.getType().getName(), &quot;BC&quot;)</span>
+<span class="nc" id="L133">                        .generatePublic(new X509EncodedKeySpec(publicKeyBytes));</span>
+<span class="nc" id="L134">                keyPair = new KeyPair(publicKey, privateKey);</span>
+<span class="nc" id="L135">            } catch (Exception e) {</span>
+<span class="nc" id="L136">                throw new CryptoEditorException(&quot;Could not recover public key from serialization&quot;, e);</span>
+<span class="nc" id="L137">            }</span>
+<span class="nc" id="L138">        } else {</span>
             // generate key pair
             try {
-<span class="nc" id="L134">                keyPair = KeyPairGenerator.getInstance(encryption.getType().getName(), &quot;BC&quot;).generateKeyPair();</span>
+<span class="nc" id="L141">                keyPair = KeyPairGenerator.getInstance(encryption.getType().getName(), &quot;BC&quot;).generateKeyPair();</span>
                 // store private key in key store
-<span class="nc" id="L136">                StoreService.getInstance()</span>
-<span class="nc" id="L137">                        .storePrivateKey(encryption.getType().getName(), keyPair.getPrivate(), password, generateCertificate(keyPair));</span>
+<span class="nc" id="L143">                StoreService.getInstance()</span>
+<span class="nc" id="L144">                        .storePrivateKey(encryption.getType().getName(), keyPair.getPrivate(), password, generateCertificate(keyPair));</span>
                 // expose public key
-<span class="nc" id="L139">                encryption.setPublicKey(keyPair.getPublic().getEncoded());</span>
-<span class="nc" id="L140">            } catch (Exception e) {</span>
-<span class="nc" id="L141">                throw new CryptoEditorException(String.format(&quot;Could not generate key-pair for %s&quot;, encryption.getType().getName()), e);</span>
-<span class="nc" id="L142">            }</span>
+<span class="nc" id="L146">                encryption.setPublicKey(keyPair.getPublic().getEncoded());</span>
+<span class="nc" id="L147">            } catch (Exception e) {</span>
+<span class="nc" id="L148">                throw new CryptoEditorException(</span>
+<span class="nc" id="L149">                        String.format(&quot;Could not generate key-pair for algorithm %s&quot;, encryption.getType().getName()), e);</span>
+<span class="nc" id="L150">            }</span>
         }
-<span class="nc" id="L144">        return keyPair;</span>
+<span class="nc" id="L152">        return keyPair;</span>
     }
 
     private Key getPBEKey(Encryption encryption, char[] password) {
-<span class="nc bnc" id="L148" title="All 2 branches missed.">        if (!encryption.getType().isPBEType()) {</span>
-<span class="nc" id="L149">            throw new IllegalArgumentException(&quot;Can only generate PBE-keys for PBE encryption types&quot;);</span>
-        }
-<span class="nc" id="L151">        Key key = null;</span>
-<span class="nc" id="L152">        byte[] salt = encryption.getSalt();</span>
-<span class="nc bnc" id="L153" title="All 2 branches missed.">        if (salt == null) {</span>
-<span class="nc" id="L154">            SecureRandom secureRandom = new SecureRandom();</span>
-<span class="nc" id="L155">            salt = secureRandom.generateSeed(SEED_BYTES);</span>
-<span class="nc" id="L156">            encryption.setSalt(salt);</span>
+<span class="nc bnc" id="L156" title="All 4 branches missed.">        assert encryption.getType().isPBEType() : encryption.getType();</span>
+
+<span class="nc" id="L158">        Key key = null;</span>
+<span class="nc" id="L159">        byte[] salt = encryption.getSalt();</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">        if (salt == null) {</span>
+<span class="nc" id="L161">            SecureRandom secureRandom = new SecureRandom();</span>
+<span class="nc" id="L162">            salt = secureRandom.generateSeed(SEED_BYTES);</span>
+<span class="nc" id="L163">            encryption.setSalt(salt);</span>
         }
 
-<span class="nc" id="L159">        PBEKeySpec pbeKeySpec = new PBEKeySpec(password, salt, ITERATIONS);</span>
+<span class="nc" id="L166">        PBEKeySpec pbeKeySpec = new PBEKeySpec(password, salt, ITERATIONS);</span>
         try {
-<span class="nc" id="L161">            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(encryption.getType().getName(), &quot;BC&quot;);</span>
-<span class="nc" id="L162">            key = keyFactory.generateSecret(pbeKeySpec);</span>
-<span class="nc" id="L163">        } catch (Exception e) {</span>
-<span class="nc" id="L164">            e.printStackTrace();</span>
-<span class="nc" id="L165">        }</span>
-<span class="nc" id="L166">        return key;</span>
+<span class="nc" id="L168">            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(encryption.getType().getName(), &quot;BC&quot;);</span>
+<span class="nc" id="L169">            key = keyFactory.generateSecret(pbeKeySpec);</span>
+<span class="nc" id="L170">        } catch (Exception e) {</span>
+<span class="nc" id="L171">            throw new CryptoEditorException(</span>
+<span class="nc" id="L172">                    String.format(&quot;Could not generate PBE-key for scheme %s&quot;, encryption.getType().getName()), e);</span>
+<span class="nc" id="L173">        }</span>
+<span class="nc" id="L174">        return key;</span>
     }
 
-    private Key generateKey(String algorithm, char[] password) {
-<span class="nc" id="L170">        SecretKey key = null;</span>
-        try {
-<span class="nc" id="L172">            key = KeyGenerator.getInstance(algorithm, &quot;BC&quot;).generateKey();</span>
-<span class="nc" id="L173">            StoreService.getInstance().storeSecretKey(algorithm, key, password);</span>
-<span class="nc" id="L174">        } catch (Exception e) {</span>
-<span class="nc" id="L175">            throw new CryptoEditorException(e);</span>
-<span class="nc" id="L176">        }</span>
-<span class="nc" id="L177">        return key;</span>
-    }
-
+    /**
+     * Utility method to generate a random certificate for private-key storage in java keystore
+     *
+     * @param keyPair RSA keypair to generate certificate for
+     * @return self-signed utility certificate
+     * @see java.security.KeyStore.PrivateKeyEntry
+     */
     private X509Certificate generateCertificate(KeyPair keyPair) {
-<span class="nc" id="L181">        X509V3CertificateGenerator cert = new X509V3CertificateGenerator();</span>
-<span class="nc" id="L182">        cert.setSerialNumber(BigInteger.valueOf(1));</span>
-<span class="nc" id="L183">        cert.setSubjectDN(new X509Principal(&quot;CN=localhost&quot;));</span>
-<span class="nc" id="L184">        cert.setIssuerDN(new X509Principal(&quot;CN=localhost&quot;));</span>
-<span class="nc" id="L185">        cert.setPublicKey(keyPair.getPublic());</span>
-<span class="nc" id="L186">        Calendar notBefore = Calendar.getInstance();</span>
-<span class="nc" id="L187">        cert.setNotBefore(notBefore.getTime()); // valid from now on</span>
-<span class="nc" id="L188">        Calendar notAfter = Calendar.getInstance();</span>
-<span class="nc" id="L189">        notAfter.add(Calendar.YEAR, 1);// valid for 1 year</span>
-<span class="nc" id="L190">        cert.setNotAfter(notAfter.getTime());</span>
-<span class="nc" id="L191">        cert.setSignatureAlgorithm(&quot;SHA1WithRSAEncryption&quot;);</span>
-<span class="nc" id="L192">        PrivateKey signingKey = keyPair.getPrivate();</span>
+<span class="nc" id="L185">        X509V3CertificateGenerator cert = new X509V3CertificateGenerator();</span>
+<span class="nc" id="L186">        cert.setSerialNumber(BigInteger.valueOf(1));</span>
+<span class="nc" id="L187">        cert.setSubjectDN(new X509Principal(&quot;CN=localhost&quot;));</span>
+<span class="nc" id="L188">        cert.setIssuerDN(new X509Principal(&quot;CN=localhost&quot;));</span>
+<span class="nc" id="L189">        cert.setPublicKey(keyPair.getPublic());</span>
+<span class="nc" id="L190">        Calendar notBefore = Calendar.getInstance();</span>
+<span class="nc" id="L191">        cert.setNotBefore(notBefore.getTime()); // valid from now on</span>
+<span class="nc" id="L192">        Calendar notAfter = Calendar.getInstance();</span>
+<span class="nc" id="L193">        notAfter.add(Calendar.YEAR, 1);// valid for 1 year</span>
+<span class="nc" id="L194">        cert.setNotAfter(notAfter.getTime());</span>
+<span class="nc" id="L195">        cert.setSignatureAlgorithm(&quot;SHA1WithRSAEncryption&quot;);</span>
+<span class="nc" id="L196">        PrivateKey signingKey = keyPair.getPrivate();</span>
         try {
-<span class="nc" id="L194">            return cert.generate(signingKey, &quot;BC&quot;);</span>
-<span class="nc" id="L195">        } catch (Exception e) {</span>
-<span class="nc" id="L196">            throw new CryptoEditorException(&quot;Could not generate RSA certificate&quot;, e);</span>
+<span class="nc" id="L198">            return cert.generate(signingKey, &quot;BC&quot;);</span>
+<span class="nc" id="L199">        } catch (Exception e) {</span>
+<span class="nc" id="L200">            throw new CryptoEditorException(&quot;Could not generate RSA certificate&quot;, e);</span>
         }
     }
 
 
     /////
 
-<span class="nc" id="L203">    private static final CryptoService instance = new CryptoService();</span>
+<span class="nc" id="L207">    private static final CryptoService instance = new CryptoService();</span>
 
-<span class="nc" id="L205">    private CryptoService() {</span>
-<span class="nc bnc" id="L206" title="All 2 branches missed.">        if (instance != null) {</span>
-<span class="nc" id="L207">            throw new IllegalStateException(&quot;Already instantiated&quot;);</span>
+<span class="nc" id="L209">    private CryptoService() {</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">        if (instance != null) {</span>
+<span class="nc" id="L211">            throw new IllegalStateException(&quot;Already instantiated&quot;);</span>
         }
-<span class="nc" id="L209">    }</span>
+<span class="nc" id="L213">    }</span>
 
     public static CryptoService getInstance() {
-<span class="nc" id="L212">        return instance;</span>
+<span class="nc" id="L216">        return instance;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
