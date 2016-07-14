@@ -26,8 +26,14 @@ public class SaveService extends Service<Void> {
     }
 
     protected Task<Void> createTask() {
-        return new Task<Void>() {
+        if(url.get() == null) {
+            throw new IllegalStateException("URL has to be set for saving");
+        }
+        if(persistenceDTO == null) {
+            throw new IllegalStateException("PersinstenceDTO has to be set for saving");
+        }
 
+        return new Task<Void>() {
             protected Void call() throws Exception {
                 ObjectMapper mapper = new ObjectMapper();
                 InputStream contentInput = new ByteArrayInputStream(mapper.writeValueAsBytes(persistenceDTO));

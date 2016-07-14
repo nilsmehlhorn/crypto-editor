@@ -84,6 +84,9 @@ public class CryptoService {
      * @return resulting hash
      */
     public byte[] getHash(byte[] input) {
+        if(input == null) {
+            throw new IllegalArgumentException("input cannot be null");
+        }
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256", "BC");
             messageDigest.update(input);
@@ -94,13 +97,19 @@ public class CryptoService {
     }
 
     /**
-     * Hashe the input with SHA-256 using the Bouncy Castle Provider and matches the result with the passed testHash
+     * Hashes the input with SHA-256 using the Bouncy Castle Provider and matches the result with the passed testHash
      *
      * @param input    content to hash
      * @param testHash hash to test against
      * @return result of the match-test
      */
     public boolean hashMatch(byte[] input, byte[] testHash) {
+        if(input == null) {
+            throw new IllegalArgumentException("input cannot be null");
+        }
+        if(testHash == null) {
+            throw new IllegalArgumentException("testHash cannot be null");
+        }
         return Arrays.equals(getHash(input), testHash);
     }
 

@@ -18,13 +18,14 @@ public class LoadService extends Service<PersistenceDTO> {
     }
 
     protected Task<PersistenceDTO> createTask() {
+        if (url.get() == null) {
+            throw new IllegalStateException("URL has to be set for loading");
+        }
         return new Task<PersistenceDTO>() {
-
             protected PersistenceDTO call() throws Exception {
                 File file = new File(url.get());
                 ObjectMapper objectMapper = new ObjectMapper();
-                PersistenceDTO dto = objectMapper.readValue(file, PersistenceDTO.class);
-                return dto;
+                return objectMapper.readValue(file, PersistenceDTO.class);
             }
         };
     }
