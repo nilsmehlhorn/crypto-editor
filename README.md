@@ -5,12 +5,13 @@ This project is based on a learning incentive for implementing a system for secu
 
 ## Installation
 
+### Download compiled release
+Download a version from the [release list](https://github.com/nilsmehlhorn/crypto-editor#releases) and run the jar via ```java -jar <filename>```
+
 ### Build it yourself
 1. Clone the repository via ```git clone https://github.com/nilsmehlhorn/crypto-editor.git```
-2. Build the jar using Maven via ```mvn jfx:jar``` or run it directly via ```mvn jfx:run```
+2. Build the jar using Maven via ```mvn package```
 
-### Download compiled release
-(coming soon)
 
 ## Cryptography
 
@@ -55,3 +56,4 @@ You also have the possiblity to save files without encryption.
 | ---             | ---         |
 |[Documentation](http://nilsmehlhorn.github.io/crypto-editor/snapshot/doc/doxygen)|[Documentation](http://nilsmehlhorn.github.io/crypto-editor/doc/release/0.2)|
 |[Coverage](http://nilsmehlhorn.github.io/crypto-editor/snapshot/coverage/)| - |
+|[Download](http://nilsmehlhorn.github.io/crypto-editor/snapshot/build/crypto-editor-0.2.1.jar)| - |
