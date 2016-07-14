@@ -5,6 +5,9 @@ This project is based on a learning incentive for implementing a system for secu
 
 ## Installation
 
+### JCE Unrestricted Policies
+To use all provided encryption functionalities (e.g. keylength above 128Bit) make sure to install the [unrestricted policies](http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html) for the Java Cryptography Extension
+
 ### Download compiled release
 Download a version from the [release list](https://github.com/nilsmehlhorn/crypto-editor#releases) and run the jar via ```java -jar <filename>```
 
@@ -45,7 +48,7 @@ Currently supported schemes are
 
 ### Asymmetric Encryption
 
-At the moment only *RSA* encryption is supported
+At the moment only RSA encryption is supported
 
 ---
 
