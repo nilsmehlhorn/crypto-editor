@@ -56,4 +56,4 @@ You also have the possiblity to save files without encryption.
 | ---             | ---         |
 |[Documentation](http://nilsmehlhorn.github.io/crypto-editor/snapshot/doc/doxygen)|[Documentation](http://nilsmehlhorn.github.io/crypto-editor/doc/release/0.2)|
 |[Coverage](http://nilsmehlhorn.github.io/crypto-editor/snapshot/coverage/)| - |
-|[Download](http://nilsmehlhorn.github.io/crypto-editor/snapshot/build/crypto-editor-0.2.1.jar)| - |
+|[Download](http://nilsmehlhorn.github.io/crypto-editor/snapshot/build/crypto-editor-0.2.2-bundle.zip)| - |
