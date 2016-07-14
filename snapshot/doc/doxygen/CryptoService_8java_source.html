@@ -119,123 +119,132 @@ $(document).ready(function(){initNavTree('CryptoService_8java_source.html','');}
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    }</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
 <div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1CryptoService.html#a4ed36f1c791db6a2d46d23b66f53aa63">   86</a></span>&#160;    <span class="keyword">public</span> byte[] <a class="code" href="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1CryptoService.html#a4ed36f1c791db6a2d46d23b66f53aa63">getHash</a>(byte[] input) {</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            MessageDigest messageDigest = MessageDigest.getInstance(<span class="stringliteral">&quot;SHA-256&quot;</span>, <span class="stringliteral">&quot;BC&quot;</span>);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            messageDigest.update(input);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            <span class="keywordflow">return</span> messageDigest.digest();</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        } <span class="keywordflow">catch</span> (Exception e) {</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code" href="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1grapher_1_1CryptographerException.html">CryptographerException</a>(e);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        }</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    }</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1CryptoService.html#aef7c29b5e51350148e699e32bc2c7232">  103</a></span>&#160;    <span class="keyword">public</span> <span class="keywordtype">boolean</span> <a class="code" href="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1CryptoService.html#aef7c29b5e51350148e699e32bc2c7232">hashMatch</a>(byte[] input, byte[] testHash) {</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="keywordflow">return</span> Arrays.equals(<a class="code" href="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1CryptoService.html#a4ed36f1c791db6a2d46d23b66f53aa63">getHash</a>(input), testHash);</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    }</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keyword">private</span> Key getSecretKey(<a class="code" href="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1encryption_1_1Encryption.html">Encryption</a> encryption, <span class="keywordtype">char</span>[] password) {</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        assert !encryption.getType().isAsymmetric() : encryption.getType();</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        SecretKey key = StoreService.getInstance().loadSecretKey(encryption.getType().getName(), password);</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <span class="keywordflow">if</span> (key == null) {</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                key = KeyGenerator.getInstance(encryption.getType().getName(), <span class="stringliteral">&quot;BC&quot;</span>).generateKey();</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                StoreService.getInstance().storeSecretKey(encryption.getType().getName(), key, password);</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;            } <span class="keywordflow">catch</span> (Exception e) {</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code" href="classorg_1_1hsd_1_1cryptoeditor_1_1CryptoEditorException.html">CryptoEditorException</a>(</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                        String.format(<span class="stringliteral">&quot;Could not generate secret-key for algorithm %s&quot;</span>, encryption.getType().getName()), e);</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;            }</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        }</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="keywordflow">return</span> key;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    }</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keyword">private</span> KeyPair getKeyPair(Encryption encryption, <span class="keywordtype">char</span>[] password) {</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        assert encryption.getType().isAsymmetric() : encryption.getType();</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        byte[] publicKeyBytes = encryption.getPublicKey();</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        KeyPair keyPair = null;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <span class="keywordflow">if</span> (publicKeyBytes != null) {</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            <span class="comment">// get private key</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            PrivateKey privateKey = StoreService.getInstance().loadPrivateKey(encryption.getType().getName(), password);</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;                PublicKey publicKey = KeyFactory.getInstance(encryption.getType().getName(), <span class="stringliteral">&quot;BC&quot;</span>)</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;                        .generatePublic(<span class="keyword">new</span> X509EncodedKeySpec(publicKeyBytes));</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                keyPair = <span class="keyword">new</span> KeyPair(publicKey, privateKey);</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            } <span class="keywordflow">catch</span> (Exception e) {</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> CryptoEditorException(<span class="stringliteral">&quot;Could not recover public key from serialization&quot;</span>, e);</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;            }</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;            <span class="comment">// generate key pair</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="keywordflow">if</span>(input == null) {</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="stringliteral">&quot;input cannot be null&quot;</span>);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        }</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            MessageDigest messageDigest = MessageDigest.getInstance(<span class="stringliteral">&quot;SHA-256&quot;</span>, <span class="stringliteral">&quot;BC&quot;</span>);</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            messageDigest.update(input);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            <span class="keywordflow">return</span> messageDigest.digest();</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        } <span class="keywordflow">catch</span> (Exception e) {</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code" href="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1grapher_1_1CryptographerException.html">CryptographerException</a>(e);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        }</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    }</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1CryptoService.html#aef7c29b5e51350148e699e32bc2c7232">  106</a></span>&#160;    <span class="keyword">public</span> <span class="keywordtype">boolean</span> <a class="code" href="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1CryptoService.html#aef7c29b5e51350148e699e32bc2c7232">hashMatch</a>(byte[] input, byte[] testHash) {</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <span class="keywordflow">if</span>(input == null) {</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="stringliteral">&quot;input cannot be null&quot;</span>);</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        }</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <span class="keywordflow">if</span>(testHash == null) {</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="stringliteral">&quot;testHash cannot be null&quot;</span>);</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        }</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        <span class="keywordflow">return</span> Arrays.equals(<a class="code" href="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1CryptoService.html#a4ed36f1c791db6a2d46d23b66f53aa63">getHash</a>(input), testHash);</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    }</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keyword">private</span> Key getSecretKey(<a class="code" href="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1encryption_1_1Encryption.html">Encryption</a> encryption, <span class="keywordtype">char</span>[] password) {</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        assert !encryption.getType().isAsymmetric() : encryption.getType();</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        SecretKey key = StoreService.getInstance().loadSecretKey(encryption.getType().getName(), password);</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="keywordflow">if</span> (key == null) {</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;                key = KeyGenerator.getInstance(encryption.getType().getName(), <span class="stringliteral">&quot;BC&quot;</span>).generateKey();</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;                StoreService.getInstance().storeSecretKey(encryption.getType().getName(), key, password);</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;            } <span class="keywordflow">catch</span> (Exception e) {</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code" href="classorg_1_1hsd_1_1cryptoeditor_1_1CryptoEditorException.html">CryptoEditorException</a>(</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;                        String.format(<span class="stringliteral">&quot;Could not generate secret-key for algorithm %s&quot;</span>, encryption.getType().getName()), e);</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            }</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        }</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        <span class="keywordflow">return</span> key;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    }</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keyword">private</span> KeyPair getKeyPair(Encryption encryption, <span class="keywordtype">char</span>[] password) {</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        assert encryption.getType().isAsymmetric() : encryption.getType();</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        byte[] publicKeyBytes = encryption.getPublicKey();</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        KeyPair keyPair = null;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        <span class="keywordflow">if</span> (publicKeyBytes != null) {</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;            <span class="comment">// get private key</span></div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;            PrivateKey privateKey = StoreService.getInstance().loadPrivateKey(encryption.getType().getName(), password);</div>
 <div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;            <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;                keyPair = KeyPairGenerator.getInstance(encryption.getType().getName(), <span class="stringliteral">&quot;BC&quot;</span>).generateKeyPair();</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;                <span class="comment">// store private key in key store</span></div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;                StoreService.getInstance()</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;                        .storePrivateKey(encryption.getType().getName(), keyPair.getPrivate(), password, generateCertificate(keyPair));</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;                <span class="comment">// expose public key</span></div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;                encryption.setPublicKey(keyPair.getPublic().getEncoded());</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;            } <span class="keywordflow">catch</span> (Exception e) {</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> CryptoEditorException(</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;                        String.format(<span class="stringliteral">&quot;Could not generate key-pair for algorithm %s&quot;</span>, encryption.getType().getName()), e);</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;            }</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        }</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;        <span class="keywordflow">return</span> keyPair;</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    }</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keyword">private</span> Key getPBEKey(Encryption encryption, <span class="keywordtype">char</span>[] password) {</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        assert encryption.getType().isPBEType() : encryption.getType();</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        Key key = null;</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;        byte[] salt = encryption.getSalt();</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;        <span class="keywordflow">if</span> (salt == null) {</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;            SecureRandom secureRandom = <span class="keyword">new</span> SecureRandom();</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;            salt = secureRandom.generateSeed(SEED_BYTES);</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;            encryption.setSalt(salt);</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        }</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;        PBEKeySpec pbeKeySpec = <span class="keyword">new</span> PBEKeySpec(password, salt, ITERATIONS);</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(encryption.getType().getName(), <span class="stringliteral">&quot;BC&quot;</span>);</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;            key = keyFactory.generateSecret(pbeKeySpec);</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        } <span class="keywordflow">catch</span> (Exception e) {</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> CryptoEditorException(</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;                    String.format(<span class="stringliteral">&quot;Could not generate PBE-key for scheme %s&quot;</span>, encryption.getType().getName()), e);</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;                PublicKey publicKey = KeyFactory.getInstance(encryption.getType().getName(), <span class="stringliteral">&quot;BC&quot;</span>)</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;                        .generatePublic(<span class="keyword">new</span> X509EncodedKeySpec(publicKeyBytes));</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;                keyPair = <span class="keyword">new</span> KeyPair(publicKey, privateKey);</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;            } <span class="keywordflow">catch</span> (Exception e) {</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> CryptoEditorException(<span class="stringliteral">&quot;Could not recover public key from serialization&quot;</span>, e);</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;            }</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            <span class="comment">// generate key pair</span></div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;                keyPair = KeyPairGenerator.getInstance(encryption.getType().getName(), <span class="stringliteral">&quot;BC&quot;</span>).generateKeyPair();</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;                <span class="comment">// store private key in key store</span></div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;                StoreService.getInstance()</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;                        .storePrivateKey(encryption.getType().getName(), keyPair.getPrivate(), password, generateCertificate(keyPair));</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;                <span class="comment">// expose public key</span></div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;                encryption.setPublicKey(keyPair.getPublic().getEncoded());</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;            } <span class="keywordflow">catch</span> (Exception e) {</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> CryptoEditorException(</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;                        String.format(<span class="stringliteral">&quot;Could not generate key-pair for algorithm %s&quot;</span>, encryption.getType().getName()), e);</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;            }</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;        }</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        <span class="keywordflow">return</span> keyPair;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    }</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    <span class="keyword">private</span> Key getPBEKey(Encryption encryption, <span class="keywordtype">char</span>[] password) {</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        assert encryption.getType().isPBEType() : encryption.getType();</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        Key key = null;</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        byte[] salt = encryption.getSalt();</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;        <span class="keywordflow">if</span> (salt == null) {</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;            SecureRandom secureRandom = <span class="keyword">new</span> SecureRandom();</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;            salt = secureRandom.generateSeed(SEED_BYTES);</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;            encryption.setSalt(salt);</div>
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        }</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;        <span class="keywordflow">return</span> key;</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    }</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    <span class="keyword">private</span> X509Certificate generateCertificate(KeyPair keyPair) {</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        X509V3CertificateGenerator cert = <span class="keyword">new</span> X509V3CertificateGenerator();</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        cert.setSerialNumber(BigInteger.valueOf(1));</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;        cert.setSubjectDN(<span class="keyword">new</span> X509Principal(<span class="stringliteral">&quot;CN=localhost&quot;</span>));</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        cert.setIssuerDN(<span class="keyword">new</span> X509Principal(<span class="stringliteral">&quot;CN=localhost&quot;</span>));</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;        cert.setPublicKey(keyPair.getPublic());</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        Calendar notBefore = Calendar.getInstance();</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        cert.setNotBefore(notBefore.getTime()); <span class="comment">// valid from now on</span></div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        Calendar notAfter = Calendar.getInstance();</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        notAfter.add(Calendar.YEAR, 1);<span class="comment">// valid for 1 year</span></div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        cert.setNotAfter(notAfter.getTime());</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        cert.setSignatureAlgorithm(<span class="stringliteral">&quot;SHA1WithRSAEncryption&quot;</span>);</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;        PrivateKey signingKey = keyPair.getPrivate();</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;            <span class="keywordflow">return</span> cert.generate(signingKey, <span class="stringliteral">&quot;BC&quot;</span>);</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        } <span class="keywordflow">catch</span> (Exception e) {</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> CryptoEditorException(<span class="stringliteral">&quot;Could not generate RSA certificate&quot;</span>, e);</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;        }</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;    }</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> CryptoService instance = <span class="keyword">new</span> CryptoService();</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    <span class="keyword">private</span> CryptoService() {</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;        <span class="keywordflow">if</span> (instance != null) {</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="stringliteral">&quot;Already instantiated&quot;</span>);</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;        }</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    }</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    <span class="keyword">public</span> <span class="keyword">static</span> CryptoService getInstance() {</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;        <span class="keywordflow">return</span> instance;</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    }</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;}</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;        PBEKeySpec pbeKeySpec = <span class="keyword">new</span> PBEKeySpec(password, salt, ITERATIONS);</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(encryption.getType().getName(), <span class="stringliteral">&quot;BC&quot;</span>);</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;            key = keyFactory.generateSecret(pbeKeySpec);</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;        } <span class="keywordflow">catch</span> (Exception e) {</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> CryptoEditorException(</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;                    String.format(<span class="stringliteral">&quot;Could not generate PBE-key for scheme %s&quot;</span>, encryption.getType().getName()), e);</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        }</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        <span class="keywordflow">return</span> key;</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    }</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <span class="keyword">private</span> X509Certificate generateCertificate(KeyPair keyPair) {</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        X509V3CertificateGenerator cert = <span class="keyword">new</span> X509V3CertificateGenerator();</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        cert.setSerialNumber(BigInteger.valueOf(1));</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;        cert.setSubjectDN(<span class="keyword">new</span> X509Principal(<span class="stringliteral">&quot;CN=localhost&quot;</span>));</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        cert.setIssuerDN(<span class="keyword">new</span> X509Principal(<span class="stringliteral">&quot;CN=localhost&quot;</span>));</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;        cert.setPublicKey(keyPair.getPublic());</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        Calendar notBefore = Calendar.getInstance();</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        cert.setNotBefore(notBefore.getTime()); <span class="comment">// valid from now on</span></div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;        Calendar notAfter = Calendar.getInstance();</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;        notAfter.add(Calendar.YEAR, 1);<span class="comment">// valid for 1 year</span></div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;        cert.setNotAfter(notAfter.getTime());</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;        cert.setSignatureAlgorithm(<span class="stringliteral">&quot;SHA1WithRSAEncryption&quot;</span>);</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;        PrivateKey signingKey = keyPair.getPrivate();</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;            <span class="keywordflow">return</span> cert.generate(signingKey, <span class="stringliteral">&quot;BC&quot;</span>);</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;        } <span class="keywordflow">catch</span> (Exception e) {</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> CryptoEditorException(<span class="stringliteral">&quot;Could not generate RSA certificate&quot;</span>, e);</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;        }</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    }</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> CryptoService instance = <span class="keyword">new</span> CryptoService();</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    <span class="keyword">private</span> CryptoService() {</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;        <span class="keywordflow">if</span> (instance != null) {</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="stringliteral">&quot;Already instantiated&quot;</span>);</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;        }</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    }</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    <span class="keyword">public</span> <span class="keyword">static</span> CryptoService getInstance() {</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;        <span class="keywordflow">return</span> instance;</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;    }</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;}</div>
 <div class="ttc" id="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1CryptoService_html_a4ed36f1c791db6a2d46d23b66f53aa63"><div class="ttname"><a href="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1CryptoService.html#a4ed36f1c791db6a2d46d23b66f53aa63">org.hsd.cryptoeditor.crypto.CryptoService.getHash</a></div><div class="ttdeci">byte[] getHash(byte[] input)</div><div class="ttdef"><b>Definition:</b> <a href="CryptoService_8java_source.html#l00086">CryptoService.java:86</a></div></div>
 <div class="ttc" id="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1grapher_1_1BCCryptographer_html"><div class="ttname"><a href="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1grapher_1_1BCCryptographer.html">org.hsd.cryptoeditor.crypto.grapher.BCCryptographer</a></div><div class="ttdef"><b>Definition:</b> <a href="BCCryptographer_8java_source.html#l00020">BCCryptographer.java:20</a></div></div>
 <div class="ttc" id="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1CryptoService_html"><div class="ttname"><a href="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1CryptoService.html">org.hsd.cryptoeditor.crypto.CryptoService</a></div><div class="ttdef"><b>Definition:</b> <a href="CryptoService_8java_source.html#l00026">CryptoService.java:26</a></div></div>
@@ -244,7 +253,7 @@ $(document).ready(function(){initNavTree('CryptoService_8java_source.html','');}
 <div class="ttc" id="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1CryptoService_html_a1d4d79b5a5bee118a80311ba1c3e5867"><div class="ttname"><a href="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1CryptoService.html#a1d4d79b5a5bee118a80311ba1c3e5867">org.hsd.cryptoeditor.crypto.CryptoService.getEncryption</a></div><div class="ttdeci">Encryption getEncryption(EncryptionType type)</div><div class="ttdef"><b>Definition:</b> <a href="CryptoService_8java_source.html#l00037">CryptoService.java:37</a></div></div>
 <div class="ttc" id="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1encryption_1_1Encryption_html"><div class="ttname"><a href="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1encryption_1_1Encryption.html">org.hsd.cryptoeditor.crypto.encryption.Encryption</a></div><div class="ttdef"><b>Definition:</b> <a href="Encryption_8java_source.html#l00010">Encryption.java:10</a></div></div>
 <div class="ttc" id="enumorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1encryption_1_1EncryptionType_html"><div class="ttname"><a href="enumorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1encryption_1_1EncryptionType.html">org.hsd.cryptoeditor.crypto.encryption.EncryptionType</a></div><div class="ttdef"><b>Definition:</b> <a href="EncryptionType_8java_source.html#l00009">EncryptionType.java:9</a></div></div>
-<div class="ttc" id="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1CryptoService_html_aef7c29b5e51350148e699e32bc2c7232"><div class="ttname"><a href="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1CryptoService.html#aef7c29b5e51350148e699e32bc2c7232">org.hsd.cryptoeditor.crypto.CryptoService.hashMatch</a></div><div class="ttdeci">boolean hashMatch(byte[] input, byte[] testHash)</div><div class="ttdef"><b>Definition:</b> <a href="CryptoService_8java_source.html#l00103">CryptoService.java:103</a></div></div>
+<div class="ttc" id="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1CryptoService_html_aef7c29b5e51350148e699e32bc2c7232"><div class="ttname"><a href="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1CryptoService.html#aef7c29b5e51350148e699e32bc2c7232">org.hsd.cryptoeditor.crypto.CryptoService.hashMatch</a></div><div class="ttdeci">boolean hashMatch(byte[] input, byte[] testHash)</div><div class="ttdef"><b>Definition:</b> <a href="CryptoService_8java_source.html#l00106">CryptoService.java:106</a></div></div>
 <div class="ttc" id="interfaceorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1grapher_1_1Cryptographer_html"><div class="ttname"><a href="interfaceorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1grapher_1_1Cryptographer.html">org.hsd.cryptoeditor.crypto.grapher.Cryptographer</a></div><div class="ttdef"><b>Definition:</b> <a href="Cryptographer_8java_source.html#l00016">Cryptographer.java:16</a></div></div>
 <div class="ttc" id="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1CryptoService_html_aa9be87e3b1c1f3ae43640cfae98d058e"><div class="ttname"><a href="classorg_1_1hsd_1_1cryptoeditor_1_1crypto_1_1CryptoService.html#aa9be87e3b1c1f3ae43640cfae98d058e">org.hsd.cryptoeditor.crypto.CryptoService.getCryptographer</a></div><div class="ttdeci">Cryptographer getCryptographer(Encryption encryption, char[] password)</div><div class="ttdef"><b>Definition:</b> <a href="CryptoService_8java_source.html#l00058">CryptoService.java:58</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -253,7 +262,7 @@ $(document).ready(function(){initNavTree('CryptoService_8java_source.html','');}
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d98dd0e56000436e199d18b195f8d08e.html">src</a></li><li class="navelem"><a class="el" href="dir_b0637fbfd27faa7372f824e7f6e9e94f.html">main</a></li><li class="navelem"><a class="el" href="dir_84c78e84247dc1182736a19439592528.html">java</a></li><li class="navelem"><a class="el" href="dir_540a1fddfcb13bbf0544e3e34bc1d950.html">org</a></li><li class="navelem"><a class="el" href="dir_6bec1566bf614276f9e07f6b50ee4a04.html">hsd</a></li><li class="navelem"><a class="el" href="dir_54960fc56f01806986d042fbc70fce4f.html">cryptoeditor</a></li><li class="navelem"><a class="el" href="dir_072102887f7c4e4ca55165570d6f7cee.html">crypto</a></li><li class="navelem"><b>CryptoService.java</b></li>
-    <li class="footer">Generated on Thu Jul 14 2016 14:31:11 for crypto-editor by
+    <li class="footer">Generated on Thu Jul 14 2016 17:33:08 for crypto-editor by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

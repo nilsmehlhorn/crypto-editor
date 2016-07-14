@@ -9,22 +9,23 @@ import org.hsd.cryptoeditor.doc.PersistenceDTO;
 
 import java.io.File;
 
-<span class="nc" id="L12">public class LoadService extends Service&lt;PersistenceDTO&gt; {</span>
+<span class="fc" id="L12">public class LoadService extends Service&lt;PersistenceDTO&gt; {</span>
 
-<span class="nc" id="L14">    private StringProperty url = new SimpleStringProperty();</span>
+<span class="fc" id="L14">    private StringProperty url = new SimpleStringProperty();</span>
 
     public final void setUrl(String value) {
-<span class="nc" id="L17">        url.set(value);</span>
-<span class="nc" id="L18">    }</span>
+<span class="fc" id="L17">        url.set(value);</span>
+<span class="fc" id="L18">    }</span>
 
     protected Task&lt;PersistenceDTO&gt; createTask() {
-<span class="nc" id="L21">        return new Task&lt;PersistenceDTO&gt;() {</span>
-
+<span class="fc bfc" id="L21" title="All 2 branches covered.">        if (url.get() == null) {</span>
+<span class="fc" id="L22">            throw new IllegalStateException(&quot;URL has to be set for loading&quot;);</span>
+        }
+<span class="fc" id="L24">        return new Task&lt;PersistenceDTO&gt;() {</span>
             protected PersistenceDTO call() throws Exception {
-<span class="nc" id="L24">                File file = new File(url.get());</span>
-<span class="nc" id="L25">                ObjectMapper objectMapper = new ObjectMapper();</span>
-<span class="nc" id="L26">                PersistenceDTO dto = objectMapper.readValue(file, PersistenceDTO.class);</span>
-<span class="nc" id="L27">                return dto;</span>
+<span class="fc" id="L26">                File file = new File(url.get());</span>
+<span class="fc" id="L27">                ObjectMapper objectMapper = new ObjectMapper();</span>
+<span class="fc" id="L28">                return objectMapper.readValue(file, PersistenceDTO.class);</span>
             }
         };
     }

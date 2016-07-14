@@ -13,26 +13,32 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-<span class="nc" id="L16">public class SaveService extends Service&lt;Void&gt; {</span>
-<span class="nc" id="L17">    private StringProperty url = new SimpleStringProperty();</span>
+<span class="fc" id="L16">public class SaveService extends Service&lt;Void&gt; {</span>
+<span class="fc" id="L17">    private StringProperty url = new SimpleStringProperty();</span>
     private PersistenceDTO persistenceDTO;
 
     public final void setUrl(String value) {
-<span class="nc" id="L21">        url.set(value);</span>
-<span class="nc" id="L22">    }</span>
+<span class="fc" id="L21">        url.set(value);</span>
+<span class="fc" id="L22">    }</span>
 
     public void setPersistenceDTO(PersistenceDTO persistenceDTO) {
-<span class="nc" id="L25">        this.persistenceDTO = persistenceDTO;</span>
-<span class="nc" id="L26">    }</span>
+<span class="fc" id="L25">        this.persistenceDTO = persistenceDTO;</span>
+<span class="fc" id="L26">    }</span>
 
     protected Task&lt;Void&gt; createTask() {
-<span class="nc" id="L29">        return new Task&lt;Void&gt;() {</span>
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        if(url.get() == null) {</span>
+<span class="fc" id="L30">            throw new IllegalStateException(&quot;URL has to be set for saving&quot;);</span>
+        }
+<span class="fc bfc" id="L32" title="All 2 branches covered.">        if(persistenceDTO == null) {</span>
+<span class="fc" id="L33">            throw new IllegalStateException(&quot;PersinstenceDTO has to be set for saving&quot;);</span>
+        }
 
+<span class="fc" id="L36">        return new Task&lt;Void&gt;() {</span>
             protected Void call() throws Exception {
-<span class="nc" id="L32">                ObjectMapper mapper = new ObjectMapper();</span>
-<span class="nc" id="L33">                InputStream contentInput = new ByteArrayInputStream(mapper.writeValueAsBytes(persistenceDTO));</span>
-<span class="nc" id="L34">                Files.copy(contentInput, Paths.get(url.get()), StandardCopyOption.REPLACE_EXISTING);</span>
-<span class="nc" id="L35">                return null;</span>
+<span class="fc" id="L38">                ObjectMapper mapper = new ObjectMapper();</span>
+<span class="fc" id="L39">                InputStream contentInput = new ByteArrayInputStream(mapper.writeValueAsBytes(persistenceDTO));</span>
+<span class="fc" id="L40">                Files.copy(contentInput, Paths.get(url.get()), StandardCopyOption.REPLACE_EXISTING);</span>
+<span class="fc" id="L41">                return null;</span>
             }
         };
     }

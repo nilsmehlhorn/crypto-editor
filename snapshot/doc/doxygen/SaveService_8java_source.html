@@ -93,17 +93,23 @@ $(document).ready(function(){initNavTree('SaveService_8java_source.html','');});
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    }</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">protected</span> Task&lt;Void&gt; createTask() {</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">new</span> Task&lt;Void&gt;() {</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;            <span class="keyword">protected</span> Void call() <span class="keywordflow">throws</span> Exception {</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                ObjectMapper mapper = <span class="keyword">new</span> ObjectMapper();</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;                InputStream contentInput = <span class="keyword">new</span> ByteArrayInputStream(mapper.writeValueAsBytes(persistenceDTO));</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                Files.copy(contentInput, Paths.get(url.get()), StandardCopyOption.REPLACE_EXISTING);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                <span class="keywordflow">return</span> null;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;            }</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        };</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    }</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;}</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordflow">if</span>(url.get() == null) {</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="stringliteral">&quot;URL has to be set for saving&quot;</span>);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        }</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordflow">if</span>(persistenceDTO == null) {</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="stringliteral">&quot;PersinstenceDTO has to be set for saving&quot;</span>);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        }</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">new</span> Task&lt;Void&gt;() {</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;            <span class="keyword">protected</span> Void call() <span class="keywordflow">throws</span> Exception {</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                ObjectMapper mapper = <span class="keyword">new</span> ObjectMapper();</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                InputStream contentInput = <span class="keyword">new</span> ByteArrayInputStream(mapper.writeValueAsBytes(persistenceDTO));</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                Files.copy(contentInput, Paths.get(url.get()), StandardCopyOption.REPLACE_EXISTING);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                <span class="keywordflow">return</span> null;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            }</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        };</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    }</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
 <div class="ttc" id="classorg_1_1hsd_1_1cryptoeditor_1_1concurrency_1_1SaveService_html"><div class="ttname"><a href="classorg_1_1hsd_1_1cryptoeditor_1_1concurrency_1_1SaveService.html">org.hsd.cryptoeditor.concurrency.SaveService</a></div><div class="ttdef"><b>Definition:</b> <a href="SaveService_8java_source.html#l00016">SaveService.java:16</a></div></div>
 <div class="ttc" id="classorg_1_1hsd_1_1cryptoeditor_1_1doc_1_1PersistenceDTO_html"><div class="ttname"><a href="classorg_1_1hsd_1_1cryptoeditor_1_1doc_1_1PersistenceDTO.html">org.hsd.cryptoeditor.doc.PersistenceDTO</a></div><div class="ttdef"><b>Definition:</b> <a href="PersistenceDTO_8java_source.html#l00013">PersistenceDTO.java:13</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -112,7 +118,7 @@ $(document).ready(function(){initNavTree('SaveService_8java_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d98dd0e56000436e199d18b195f8d08e.html">src</a></li><li class="navelem"><a class="el" href="dir_b0637fbfd27faa7372f824e7f6e9e94f.html">main</a></li><li class="navelem"><a class="el" href="dir_84c78e84247dc1182736a19439592528.html">java</a></li><li class="navelem"><a class="el" href="dir_540a1fddfcb13bbf0544e3e34bc1d950.html">org</a></li><li class="navelem"><a class="el" href="dir_6bec1566bf614276f9e07f6b50ee4a04.html">hsd</a></li><li class="navelem"><a class="el" href="dir_54960fc56f01806986d042fbc70fce4f.html">cryptoeditor</a></li><li class="navelem"><a class="el" href="dir_ac4bd4ff7f6405a988be0fb6811ad68e.html">concurrency</a></li><li class="navelem"><b>SaveService.java</b></li>
-    <li class="footer">Generated on Thu Jul 14 2016 14:31:11 for crypto-editor by
+    <li class="footer">Generated on Thu Jul 14 2016 17:33:08 for crypto-editor by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>
