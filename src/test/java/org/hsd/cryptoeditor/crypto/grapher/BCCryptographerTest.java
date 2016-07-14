@@ -8,6 +8,7 @@ import org.hsd.cryptoeditor.crypto.encryption.EncryptionPadding;
 import org.hsd.cryptoeditor.crypto.encryption.EncryptionType;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -36,8 +37,8 @@ import static org.mockito.Matchers.*;
 @PrepareForTest(Cipher.class)
 public class BCCryptographerTest {
 
-    @Before
-    public void initialize() {
+    @BeforeClass
+    public static void initialize() {
         Security.addProvider(new BouncyCastleProvider());
     }
 
