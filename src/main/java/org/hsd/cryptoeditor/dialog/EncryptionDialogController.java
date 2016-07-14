@@ -108,6 +108,9 @@ public class EncryptionDialogController {
         if (encryption.getType().isPBEType()) {
             tabPane.getSelectionModel().select(pbeTab);
             pbeDropdown.getSelectionModel().select(encryption.getType());
+        } else if (encryption.getType().isAsymmetric()) {
+            tabPane.getSelectionModel().select(asymmetricTab);
+            asymmetricDropdown.getSelectionModel().select(encryption.getType());
         } else {
             tabPane.getSelectionModel().select(symmetricTab);
             symmetricTypeList.getSelectionModel().select(encryption.getType());
@@ -115,7 +118,7 @@ public class EncryptionDialogController {
     }
 
     private void switchToMode(EncryptionMode mode) {
-        if(mode == null) return;
+        if (mode == null) return;
         selected.setMode(mode);
         if (mode.isStreamMode()) {
             paddingDropdown.setDisable(true);
